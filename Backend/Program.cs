@@ -1,7 +1,9 @@
 using Backend;
+using Backend.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Neo4j.Driver;
+using MongoDB.Bson;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +32,13 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
     return new MongoClient(settings?.ConnectionString);
 });
 
+// Configure MongoDB Identity
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+    .AddMongoDbStores<ApplicationUser, ApplicationRole, ObjectId>(
+        builder.Configuration["MongoDbSettings:ConnectionString"],
+        builder.Configuration["MongoDbSettings:DatabaseName"]);
+
+
 // Register Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -50,6 +59,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
