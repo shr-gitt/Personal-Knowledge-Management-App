@@ -1,10 +1,23 @@
 using Backend;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using Neo4j.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+//Configure Neo4j settings from appsettings.json
+builder.Services.Configure<Neo4jSettings>(
+    builder.Configuration.GetSection("Neo4jSettings"));
+
+//Register Neo4j client singleton
+builder.Services.AddSingleton<IDriver>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<Neo4jSettings>>().Value;
+    return GraphDatabase.Driver(settings.Uri, AuthTokens.Basic(settings.UserName, settings.Password));
+});
 
 // Configure MongoDB settings from appsettings.json
 builder.Services.Configure<MongoDbSettings>(
