@@ -1,5 +1,7 @@
 using Backend;
+using Backend.Data;
 using Backend.Models;
+using Backend.Service;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using Neo4j.Driver;
@@ -18,7 +20,18 @@ builder.Services.Configure<Neo4jSettings>(
 builder.Services.AddSingleton<IDriver>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<Neo4jSettings>>().Value;
-    return GraphDatabase.Driver(settings.Uri, AuthTokens.Basic(settings.UserName, settings.Password));
+    var logger = sp.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        var driver = GraphDatabase.Driver(settings.Uri, AuthTokens.Basic(settings.UserName, settings.Password));
+        logger.LogInformation("Successfully connected to Neo4j at {Uri}", settings.Uri); // Log successful connection
+        return driver;
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error while trying to connect to Neo4j at {Uri}", settings.Uri);
+        throw new InvalidOperationException("Could not connect to Neo4j.", ex);
+    }
 });
 
 // Configure MongoDB settings from appsettings.json
@@ -29,7 +42,18 @@ builder.Services.Configure<MongoDbSettings>(
 builder.Services.AddSingleton<IMongoClient>(sp =>
 {
     var settings = builder.Configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
-    return new MongoClient(settings?.ConnectionString);
+    var logger = sp.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        var client = new MongoClient(settings?.ConnectionString);
+        logger.LogInformation("Successfully connected to MongoDB at {ConnectionString}",settings?.ConnectionString);
+        return client;
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex,"Error while trying to connect to MongoDB at {ConnectionString}",settings?.ConnectionString);
+        throw new InvalidOperationException("Could not connect to MongoDB.", ex);
+    }
 });
 
 // Configure MongoDB Identity
@@ -38,6 +62,8 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
         builder.Configuration["MongoDbSettings:ConnectionString"],
         builder.Configuration["MongoDbSettings:DatabaseName"]);
 
+builder.Services.AddSingleton<AuthContext>();
+builder.Services.AddSingleton<IndexService>();
 
 // Register Swagger services
 builder.Services.AddEndpointsApiExplorer();
