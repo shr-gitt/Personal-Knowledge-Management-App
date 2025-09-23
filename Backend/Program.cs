@@ -56,6 +56,23 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
     }
 });
 
+builder.Services.AddSingleton<IMongoDatabase>(sp =>
+{
+    var settings = builder.Configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
+    var logger = sp.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        var client = sp.GetRequiredService<IMongoClient>();
+        logger.LogInformation("Successfully added singleton IMongoDatabase");
+        return client!.GetDatabase(settings?.DatabaseName);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex,"Error while trying to add singleton IMongoDatabase");
+        throw new InvalidOperationException("Could not add singleton IMongoDatabase", ex);
+    }
+});
+
 // Configure MongoDB Identity
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
     .AddMongoDbStores<ApplicationUser, ApplicationRole, ObjectId>(
@@ -68,6 +85,14 @@ builder.Services.AddSingleton<IndexService>();
 // Register Swagger services
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -85,15 +110,19 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseCors("AllowAll");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapStaticAssets();
+app.UseStaticFiles();
 
-app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+app.MapControllers();
 
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/swagger");
+    return Task.CompletedTask;
+});
 
 app.Run();
