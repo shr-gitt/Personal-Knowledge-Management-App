@@ -20,6 +20,10 @@ builder.Services.Configure<Neo4jSettings>(
 builder.Services.AddSingleton<IDriver>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<Neo4jSettings>>().Value;
+    if (string.IsNullOrEmpty(settings.Uri))
+    {
+        throw new InvalidOperationException("Neo4j connection string is not configured.");
+    }
     var logger = sp.GetRequiredService<ILogger<Program>>();
     try
     {
@@ -42,16 +46,20 @@ builder.Services.Configure<MongoDbSettings>(
 builder.Services.AddSingleton<IMongoClient>(sp =>
 {
     var settings = builder.Configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
+    if (string.IsNullOrEmpty(settings?.ConnectionString))
+    {
+        throw new InvalidOperationException("MongoDB connection string is not configured.");
+    }
     var logger = sp.GetRequiredService<ILogger<Program>>();
     try
     {
-        var client = new MongoClient(settings?.ConnectionString);
-        logger.LogInformation("Successfully connected to MongoDB at {ConnectionString}",settings?.ConnectionString);
+        var client = new MongoClient(settings.ConnectionString);
+        logger.LogInformation("Successfully connected to MongoDB at {ConnectionString}",settings.ConnectionString);
         return client;
     }
     catch (Exception ex)
     {
-        logger.LogError(ex,"Error while trying to connect to MongoDB at {ConnectionString}",settings?.ConnectionString);
+        logger.LogError(ex,"Error while trying to connect to MongoDB at {ConnectionString}",settings.ConnectionString);
         throw new InvalidOperationException("Could not connect to MongoDB.", ex);
     }
 });
@@ -64,12 +72,29 @@ builder.Services.AddSingleton<IMongoDatabase>(sp =>
     {
         var client = sp.GetRequiredService<IMongoClient>();
         logger.LogInformation("Successfully added singleton IMongoDatabase");
-        return client!.GetDatabase(settings?.DatabaseName);
+        return client.GetDatabase(settings?.DatabaseName);
     }
     catch (Exception ex)
     {
         logger.LogError(ex,"Error while trying to add singleton IMongoDatabase");
         throw new InvalidOperationException("Could not add singleton IMongoDatabase", ex);
+    }
+});
+
+builder.Services.AddScoped<IMongoCollection<ApplicationUser>>(sp =>
+{
+    var logger = sp.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        var database = sp.GetRequiredService<IMongoDatabase>();
+        var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
+        logger.LogInformation("Successfully connected to MongoDB at {Database}", settings.DatabaseName);
+        return database.GetCollection<ApplicationUser>(settings.UserCollectionName);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex,"Could not add scoped IMongoCollection<User>");
+        throw new InvalidOperationException("Could not add scoped IMongoCollection<User>",ex);
     }
 });
 
@@ -95,6 +120,15 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation("Application started successfully.");
+
+app.Lifetime.ApplicationStopping.Register(() =>
+{
+    var driver = app.Services.GetRequiredService<IDriver>();
+    driver.DisposeAsync().GetAwaiter().GetResult();}
+    );
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
