@@ -21,6 +21,13 @@ public class AuthController : ControllerBase
         return Ok(users);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetUserByUsername(string username)
+    {
+        var user = await _authservice.GetUserByUsername(username);
+        return Ok(user);
+    }
+
     [HttpPost]
     [Consumes("multipart/form-data")]
     [ProducesResponseType(typeof(ApiResponse<string>),200)]

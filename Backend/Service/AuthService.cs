@@ -34,6 +34,9 @@ public class AuthService
     public async Task<IEnumerable<ApplicationUser>> GetAllUsers()
         => await _userRepository.GetAllAsync();
     
+    public async Task<ApplicationUser> GetUserByUsername(string username)
+        => await _userManager.FindByNameAsync(username);
+    
     public async Task<AuthResponse> SignUpAccount(SignUpRequest model)
     {
         var existingUser = await _userManager.FindByEmailAsync(model.Email);
