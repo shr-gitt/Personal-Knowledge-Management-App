@@ -1,8 +1,8 @@
 using Backend.DTO;
 using Backend.Models;
+using Backend.Repositories.Interfaces;
 using Backend.Repositories.Implementations;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace Backend.Service;
 
@@ -116,6 +116,20 @@ public class AuthService
         }
 
         var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
+        
+        if (result.RequiresTwoFactor)
+        {
+            _logger.LogInformation("User requires two-factor authentication.");
+
+            await _emailSender.SendEmailAsync(
+                user.Name, 
+                user.Email!, 
+                "Two-factor Authentication", 
+                $"Your code for logging in is:<br><strong>code</strong><br>" +
+                $"This code is valid for 5 minutes from now i.e. upto <br><strong>{DateTime.Now}</strong></br> UTC. Copy this code into the app to login."
+            );
+        }
+        
         if (result.Succeeded)
         {
             _logger.LogInformation("User signed in successfully.");
@@ -132,12 +146,6 @@ public class AuthService
         {
             _logger.LogWarning("User not allowed to sign in.");
             return new AuthResponse { Success = false, Message = "Sign-in not allowed. Please confirm your email or contact support." };
-        }
-
-        if (result.RequiresTwoFactor)
-        {
-            _logger.LogInformation("User requires two-factor authentication.");
-            return new AuthResponse { Success = false, Message = "Two-factor authentication is required.", RequiresTwoFactor = true};
         }
 
         _logger.LogWarning("Invalid login attempt.");

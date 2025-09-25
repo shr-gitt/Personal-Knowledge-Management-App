@@ -81,6 +81,7 @@ public class AuthController : ControllerBase
         
         if (result.RequiresTwoFactor)
         {
+            
             return Ok(new ApiResponse<string>
             {
                 Success = false,
