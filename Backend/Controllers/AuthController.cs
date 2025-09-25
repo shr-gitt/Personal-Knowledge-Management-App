@@ -132,4 +132,37 @@ public class AuthController : ControllerBase
             Data = default
         });
     }
+
+    [HttpPost]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(typeof(ApiResponse<string>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<string>), 400)]
+    public async Task<IActionResult> UpdateUserProfile([FromForm] UpdateProfile model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Model is invalid",
+                Data = default
+            });
+
+        var result = await _authservice.UpdateAccount(model);
+        if (result.Success)
+        {
+            return Ok(new ApiResponse<string>
+            {
+                Success = true,
+                Message = "Update User Successful",
+                Data = default
+            });
+        }
+        
+        return BadRequest(new ApiResponse<string>
+        {
+            Success = false,
+            Message = "User update failed. Please try again later.",
+            Data = result.Data
+        }); 
+    }
 }

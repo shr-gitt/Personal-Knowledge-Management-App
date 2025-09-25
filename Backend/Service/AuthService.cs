@@ -171,4 +171,63 @@ public class AuthService
             return new AuthResponse { Success = false, Message = "Error occurred during sign out." };
         }
     }
+
+    public async Task<AuthResponse> UpdateAccount(UpdateProfile model)
+    {
+        var existingUser = await _userManager.FindByNameAsync(model.Username);
+        
+        string imagePath = "";
+        if (model.Image != null)
+        {
+            try
+            {
+                imagePath = await _uploadImageService.UploadImage(model.Image);
+                _logger.LogInformation($"Upload image called {imagePath}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Failed to upload image: {ex.Message}");
+                return new AuthResponse
+                {
+                    Success = false,
+                    Message = "Error uploading image. Please try again later."
+                };
+            }            
+        }
+        
+        var user = new ApplicationUser
+        {
+            UserName = model.Username,
+            Name = model.Name,
+            PhoneNumber = model.Phone,
+            Image = imagePath
+        };
+        
+        try
+        {
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User updated.");
+                return new AuthResponse
+                {
+                    Success = true,
+                    Message = "User update successful."
+                };
+            }
+
+            // If user creation fails, return the errors
+            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+            return new AuthResponse
+            {
+                Success = false,
+                Message = "User update failed.",
+                Data = errors
+            };        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during user update.");
+            return new AuthResponse { Success = false, Message = $"User update failed: {ex.Message}" };
+        }
+    }
 }
