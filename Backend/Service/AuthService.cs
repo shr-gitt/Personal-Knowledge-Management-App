@@ -13,19 +13,22 @@ public class AuthService
     private readonly IEmailSender _emailSender;
     private readonly ILogger<AuthService> _logger;
     private readonly UserRepository _userRepository;
+    private readonly UploadImageService _uploadImageService;
 
     public AuthService(
         UserManager<ApplicationUser> userManager, 
         SignInManager<ApplicationUser> signInManager,
         IEmailSender emailSender, 
         ILogger<AuthService> logger,
-        UserRepository userRepository)
+        UserRepository userRepository,
+        UploadImageService uploadImageService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSender = emailSender;
         _logger = logger;
         _userRepository = userRepository;
+        _uploadImageService = uploadImageService;
     }
 
     public async Task<IEnumerable<ApplicationUser>> GetAllUsers()
@@ -48,7 +51,8 @@ public class AuthService
         {
             try
             {
-                imagePath = model.Image.FileName; 
+                imagePath = await _uploadImageService.UploadImage(model.Image);
+                _logger.LogInformation($"Upload image called {imagePath}");
             }
             catch (Exception ex)
             {
