@@ -1,7 +1,6 @@
 using Backend.DTO;
 using Backend.Models;
 using Backend.Repositories.Interfaces;
-using Backend.Repositories.Implementations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Backend.Service;
@@ -12,7 +11,6 @@ public class AuthService
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IEmailSender _emailSender;
     private readonly ILogger<AuthService> _logger;
-    private readonly UserRepository _userRepository;
     private readonly UploadImageService _uploadImageService;
 
     public AuthService(
@@ -20,19 +18,18 @@ public class AuthService
         SignInManager<ApplicationUser> signInManager,
         IEmailSender emailSender, 
         ILogger<AuthService> logger,
-        UserRepository userRepository,
         UploadImageService uploadImageService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSender = emailSender;
         _logger = logger;
-        _userRepository = userRepository;
         _uploadImageService = uploadImageService;
     }
 
-    public async Task<IEnumerable<ApplicationUser>> GetAllUsers()
-        => await _userRepository.GetAllAsync();
+    public Task<IEnumerable<ApplicationUser>> GetAllUsers()
+        => null;
+        //=> await _userManager.GetUserAsync();
     
     public async Task<ApplicationUser> GetUserByUsername(string username)
         => await _userManager.FindByNameAsync(username);
@@ -174,7 +171,7 @@ public class AuthService
 
     public async Task<AuthResponse> UpdateAccount(UpdateProfile model)
     {
-        var existingUser = await _userManager.FindByNameAsync(model.Username);
+        //var existingUser = await _userManager.FindByNameAsync(model.Username);
         
         string imagePath = "";
         if (model.Image != null)

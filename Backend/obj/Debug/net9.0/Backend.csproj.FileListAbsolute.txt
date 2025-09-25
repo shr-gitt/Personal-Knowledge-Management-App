@@ -112,3 +112,6 @@
 /Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/obj/Debug/net9.0/Backend.pdb
 /Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/obj/Debug/net9.0/Backend.genruntimeconfig.cache
 /Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/obj/Debug/net9.0/ref/Backend.dll
+/Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/bin/Debug/net9.0/BouncyCastle.Cryptography.dll
+/Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/bin/Debug/net9.0/MailKit.dll
+/Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/bin/Debug/net9.0/MimeKit.dll
