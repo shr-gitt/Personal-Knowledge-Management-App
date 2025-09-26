@@ -1,0 +1,44 @@
+using Backend.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Options;
+
+namespace Backend.Service;
+
+public class CustomUserManager : UserManager<ApplicationUser>
+{
+    public CustomUserManager(
+        IUserStore<ApplicationUser> store,
+        IOptions<IdentityOptions> optionsAccessor,
+        IPasswordHasher<ApplicationUser> passwordHasher,
+        IEnumerable<IUserValidator<ApplicationUser>> userValidators,
+        IEnumerable<IPasswordValidator<ApplicationUser>> passwordValidators,
+        ILookupNormalizer keyNormalizer,
+        IdentityErrorDescriber errors,
+        IServiceProvider services,
+        ILogger<UserManager<ApplicationUser>> logger
+    ) : base(store, optionsAccessor, passwordHasher, userValidators, passwordValidators, keyNormalizer, errors, services, logger)
+    {
+    }
+
+    public override Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user)
+    {
+        return GenerateUserTokenAsync(user, "TokenProvider", ResetPasswordTokenPurpose);
+    }
+
+    public override Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user)
+    {
+        return GenerateUserTokenAsync(user, "TokenProvider", ConfirmEmailTokenPurpose);
+    }
+
+    public override Task<string> GenerateTwoFactorTokenAsync(ApplicationUser user, string tokenProvider)
+    {
+        ThrowIfDisposed();
+        return GenerateUserTokenAsync(user, "TokenProvider", "TwoFactor");
+    }
+    
+    public Task<string> GenerateDeleteAccountTokenAsync(ApplicationUser user, string tokenProvider)
+    {
+        ThrowIfDisposed();
+        return GenerateUserTokenAsync(user, "TokenProvider", "DeleteAccount");
+    }
+}
