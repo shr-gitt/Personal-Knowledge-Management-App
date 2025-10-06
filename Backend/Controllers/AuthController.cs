@@ -165,4 +165,33 @@ public class AuthController : ControllerBase
             Data = result.Data
         }); 
     }
+
+    public async Task<IActionResult> DeleteUserProfile(SignInRequest model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new ApiResponse<string>{
+                Success = false,
+                Message = "Model is invalid",
+                Data = default
+            });
+
+        var result = await _authservice.DeleteAccount(model);
+       
+        if (result.Success)
+        {
+            return Ok(new ApiResponse<string>
+            {
+                Success = true,
+                Message = "Delete User Successful",
+                Data = default
+            });
+        }
+        
+        return BadRequest(new ApiResponse<string>
+        {
+            Success = false,
+            Message = "User delete failed. Please try again later.",
+            Data = result.Data
+        }); 
+    }
 }

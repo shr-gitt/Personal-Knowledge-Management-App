@@ -12,19 +12,25 @@ public class AuthService
     private readonly IEmailSender _emailSender;
     private readonly ILogger<AuthService> _logger;
     private readonly UploadImageService _uploadImageService;
+    private readonly CustomUserManager _customUserManager;
+    private readonly TokenProvider<ApplicationUser> _tokenProvider;
 
     public AuthService(
         UserManager<ApplicationUser> userManager, 
         SignInManager<ApplicationUser> signInManager,
         IEmailSender emailSender, 
         ILogger<AuthService> logger,
-        UploadImageService uploadImageService)
+        UploadImageService uploadImageService,
+        CustomUserManager customUserManager,
+        TokenProvider<ApplicationUser> tokenProvider)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _emailSender = emailSender;
         _logger = logger;
         _uploadImageService = uploadImageService;
+        _customUserManager = customUserManager;
+        _tokenProvider = tokenProvider;
     }
 
     public Task<IEnumerable<ApplicationUser>> GetAllUsers()
@@ -118,13 +124,24 @@ public class AuthService
         {
             _logger.LogInformation("User requires two-factor authentication.");
 
-            await _emailSender.SendEmailAsync(
-                user.Name, 
-                user.Email!, 
-                "Two-factor Authentication", 
-                $"Your code for logging in is:<br><strong>code</strong><br>" +
-                $"This code is valid for 5 minutes from now i.e. upto <br><strong>{DateTime.Now}</strong></br> UTC. Copy this code into the app to login."
-            );
+            var code = await _customUserManager.GenerateTwoFactorTokenAsync(user, "CustomTokenProvider");
+
+            try
+            {
+                await _emailSender.SendEmailAsync(
+                    user.Name,
+                    user.Email!, 
+                    "Login Attempt",
+                    $"Your code for logging in is:<br><strong>{code}</strong><br>" +
+                    $"This code is valid for 5 minutes from now i.e. upto <br><strong>{DateTime.Now}</strong></br> UTC. Copy this code into the app to login.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send reset password email to {Email}", user.Email);
+                return new AuthResponse { Success = false, Message = "Failed to send email for Two-factor authentication. Please try again later." };
+            }
+
+            return new AuthResponse { Success = false, Message = "Two-factor Authentication required." };
         }
         
         if (result.Succeeded)
@@ -225,6 +242,47 @@ public class AuthService
         {
             _logger.LogError(ex, "Error during user update.");
             return new AuthResponse { Success = false, Message = $"User update failed: {ex.Message}" };
+        }
+    }
+
+    public async Task<AuthResponse> DeleteAccount(SignInRequest model)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                _logger.LogWarning("User not found.");
+                return new AuthResponse { Success = false, Message = "User not found." };
+            }
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
+         
+            if (result.Succeeded)
+            {
+                _logger.LogInformation("User deleted successfully.");
+                return new AuthResponse { Success = true, Message = "Account deletion successful." };
+            }
+
+            if (result.IsLockedOut)
+            {
+                _logger.LogWarning("User account locked out.");
+                return new AuthResponse { Success = false, Message = "Account is locked. Please try again later." };
+            }
+
+            if (result.IsNotAllowed)
+            {
+                _logger.LogWarning("User not allowed to sign in.");
+                return new AuthResponse { Success = false, Message = "Sign-in not allowed. Please confirm your email or contact support." };
+            }
+
+            _logger.LogWarning("Invalid login attempt.");
+            return new AuthResponse { Success = false, Message = "Invalid email or password." };
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Cannot delete account");
+            return new AuthResponse {Success = false, Message = $"User account deletion failed: {e.Message}"};
         }
     }
 }

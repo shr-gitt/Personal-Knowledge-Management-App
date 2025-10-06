@@ -22,23 +22,23 @@ public class CustomUserManager : UserManager<ApplicationUser>
 
     public override Task<string> GeneratePasswordResetTokenAsync(ApplicationUser user)
     {
-        return GenerateUserTokenAsync(user, "TokenProvider", ResetPasswordTokenPurpose);
+        return GenerateUserTokenAsync(user, "CustomTokenProvider", ResetPasswordTokenPurpose);
     }
 
     public override Task<string> GenerateEmailConfirmationTokenAsync(ApplicationUser user)
     {
-        return GenerateUserTokenAsync(user, "TokenProvider", ConfirmEmailTokenPurpose);
+        return GenerateUserTokenAsync(user, "CustomTokenProvider", ConfirmEmailTokenPurpose);
     }
 
     public override Task<string> GenerateTwoFactorTokenAsync(ApplicationUser user, string tokenProvider)
     {
         ThrowIfDisposed();
-        return GenerateUserTokenAsync(user, "TokenProvider", "TwoFactor");
+        return GenerateUserTokenAsync(user, tokenProvider, "TwoFactor");
     }
     
     public Task<string> GenerateDeleteAccountTokenAsync(ApplicationUser user, string tokenProvider)
     {
         ThrowIfDisposed();
-        return GenerateUserTokenAsync(user, "TokenProvider", "DeleteAccount");
+        return GenerateUserTokenAsync(user, tokenProvider, "DeleteAccount");
     }
 }
