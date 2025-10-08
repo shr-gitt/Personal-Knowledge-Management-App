@@ -263,4 +263,36 @@ public class AuthController : ControllerBase
             Data = default
         });
     }
+    
+    [HttpPost]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(ApiResponse<string>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<string>), 400)]
+    public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordRequest model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Model is invalid",
+                Data = default
+            });
+        
+        var result = await _authservice.ChangePassword(model);
+
+        if (result.Success)
+            return Ok(new ApiResponse<string>
+            {
+                Success = true,
+                Message = "Change Password Successful",
+                Data = default
+            });
+
+        return BadRequest(new ApiResponse<string>
+        {
+            Success = false,
+            Message = "Change Password Failed",
+            Data = default
+        });
+    }
 }

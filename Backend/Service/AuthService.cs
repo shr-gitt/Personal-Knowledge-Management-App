@@ -1,6 +1,7 @@
 using Backend.DTO;
 using Backend.Models;
 using Backend.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 
@@ -343,6 +344,42 @@ public class AuthService
         {
             _logger.LogError(ex,"Cannot reset password");
             return new AuthResponse { Success = false, Message = $"Reset password failed: {ex.Message}" };
+        }
+    }
+
+    public async Task<AuthResponse> ChangePassword(ChangePasswordRequest model)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+                return new AuthResponse
+                {
+                    Success = false,
+                    Message = "User not found.",
+                    Data = default
+                };
+
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+
+            if (result.Succeeded)
+                return new AuthResponse
+                {
+                    Success = true,
+                    Message = "Password Changed successfully."
+                };
+
+            return new AuthResponse
+            {
+                Success = false,
+                Message = "Password Changed failed."
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,"Error changing password");
+            return new AuthResponse { Success = false, Message = $"Error changing password: {ex.Message}" };
         }
     }
 }
