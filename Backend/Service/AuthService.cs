@@ -2,6 +2,7 @@ using Backend.DTO;
 using Backend.Models;
 using Backend.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace Backend.Service;
 
@@ -137,7 +138,7 @@ public class AuthService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to send reset password email to {Email}", user.Email);
+                _logger.LogError(ex, "Failed to send two factor login email to {Email}", user.Email);
                 return new AuthResponse { Success = false, Message = "Failed to send email for Two-factor authentication. Please try again later." };
             }
 
@@ -283,6 +284,65 @@ public class AuthService
         {
             _logger.LogError(e, "Cannot delete account");
             return new AuthResponse {Success = false, Message = $"User account deletion failed: {e.Message}"};
+        }
+    }
+
+    public async Task<AuthResponse> ForgotPassword(ForgotPasswordRequest model)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+                return new AuthResponse { Success = false, Message = "User not found." };
+
+            _logger.LogInformation("Forgot password called.");
+
+            var code = await _customUserManager.GeneratePasswordResetTokenAsync(user);
+
+            try
+            {
+                await _emailSender.SendEmailAsync(
+                    user.Name,
+                    user.Email!,
+                    "Reset Password",
+                    $"Your code for resetting password is:<br><strong>{code}</strong><br>" +
+                    $"This code is valid for 5 minutes from now i.e. upto <br><strong>{DateTime.Now}</strong></br> UTC. Copy this code into the app to login.");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to send reset password email to {Email}", user.Email);
+                return new AuthResponse
+                    { Success = false, Message = "Failed to send email for reset password. Please try again later." };
+            }
+
+            return new AuthResponse { Success = true, Message = "Reset password success." };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Cannot forgot password");
+            return new AuthResponse { Success = false, Message = $"Forgot password failed: {ex.Message}" };
+        }
+    }
+
+    public async Task<AuthResponse> ResetPassword(ResetPasswordRequest model)
+    {
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+                return new AuthResponse { Success = false, Message = "User not found." };
+            
+            var result = await _userManager.ResetPasswordAsync(user, model.ResetCode, model.NewPassword);
+            if (result.Succeeded)
+                return new AuthResponse { Success = true, Message = "Reset Password success." };
+            
+            return new AuthResponse { Success = false, Message = "Reset password failed." };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,"Cannot reset password");
+            return new AuthResponse { Success = false, Message = $"Reset password failed: {ex.Message}" };
         }
     }
 }

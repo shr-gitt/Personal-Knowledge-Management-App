@@ -1,5 +1,6 @@
 using Backend.DTO;
 using Backend.Service;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend.Controllers;
@@ -165,7 +166,11 @@ public class AuthController : ControllerBase
             Data = result.Data
         }); 
     }
-
+    
+    [HttpPost]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(ApiResponse<string>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<string>), 400)]
     public async Task<IActionResult> DeleteUserProfile(SignInRequest model)
     {
         if (!ModelState.IsValid)
@@ -193,5 +198,69 @@ public class AuthController : ControllerBase
             Message = "User delete failed. Please try again later.",
             Data = result.Data
         }); 
+    }
+
+    [HttpPost]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(ApiResponse<string>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<string>), 400)]
+    public async Task<IActionResult> ForgotPassword([FromForm] ForgotPasswordRequest model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Model is invalid",
+                Data = default
+            });
+        
+        var result = await _authservice.ForgotPassword(model);
+
+        if (result.Success)
+            return Ok(new ApiResponse<string>
+            {
+                Success = true,
+                Message = "Forgot Password Successful",
+                Data = default
+            });
+
+        return BadRequest(new ApiResponse<string>
+        {
+            Success = false,
+            Message = "Forgot Password Failed",
+            Data = default
+        });
+    }
+
+    [HttpPost]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(ApiResponse<string>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<string>), 400)]
+    public async Task<IActionResult> ResetPassword([FromForm] ResetPasswordRequest model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new ApiResponse<string>
+            {
+                Success = false,
+                Message = "Model is invalid",
+                Data = default
+            });
+
+        var result = await _authservice.ResetPassword(model);
+
+        if (result.Success)
+            return Ok(new ApiResponse<string>
+            {
+                Success = true,
+                Message = "Reset Password Successful",
+                Data = default
+            });
+
+        return BadRequest(new ApiResponse<string>
+        {
+            Success = true,
+            Message = "Reset Password Failed",
+            Data = default
+        });
     }
 }
