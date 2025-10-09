@@ -1,4 +1,5 @@
 using Backend;
+using Backend.Controllers;
 using Backend.Data;
 using Backend.Models;
 using Backend.Service;
@@ -105,7 +106,11 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
         builder.Configuration["MongoDbSettings:DatabaseName"]);
 
 builder.Services.AddSingleton<AuthContext>();
+builder.Services.AddSingleton<NoteContext>();
 builder.Services.AddSingleton<IndexService>();
+
+builder.Services.AddScoped<NotesController>();
+builder.Services.AddScoped<NoteService>();
 
 // Register Swagger services
 builder.Services.AddEndpointsApiExplorer();
