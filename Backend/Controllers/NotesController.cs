@@ -50,9 +50,9 @@ public class NotesController :  ControllerBase
             return Ok(new ApiResponse<string>
             {
                 Success = true, 
-                Message = "Note created",
+                Message = result.Message,
             });
         
-        return BadRequest(new ApiResponse<string>{Success = false, Message = "Note could not be created"});
+        return BadRequest(new ApiResponse<string>{Success = false, Message = result.Message});
     }
 }

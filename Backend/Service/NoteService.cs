@@ -19,11 +19,14 @@ public class NoteService
     
     public async Task<ServiceResponse> CreateNote(CreateNote noteDto)
     {
+        if (string.IsNullOrWhiteSpace(noteDto.Title))
+        {
+            _logger.LogError("Attempted to create a note without title");
+            return new ServiceResponse { Success = false, Message = "Title cannot be empty." };
+        }
+        
         try
         {
-            if (String.IsNullOrEmpty(noteDto.Title))
-                throw new Exception("Title cannot be empty");
-
             var note = new Note
             {
                 UserId = noteDto.UserId,
@@ -36,12 +39,22 @@ public class NoteService
 
             await _notes.InsertOneAsync(note);
 
-            return new ServiceResponse {Success = true, Message = "Note created"};
+            _logger.LogInformation("Note successfully created for user {userId}", note.UserId);
+            return new ServiceResponse { Success = true, Message = "Note created" };
+        }
+        catch (MongoException ex)
+        {
+            _logger.LogError(ex, "MongoDB error while creating note for user {UserId}", noteDto.UserId);
+            return new ServiceResponse
+            {
+                Success = false,
+                Message = "Database error occurred while creating note."
+            };
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, ex.Message);
-            return new ServiceResponse {Success = false, Message = ex.Message};
+            _logger.LogError(ex, "Unexpected error while creating note for user {UserId}", noteDto.UserId);
+            return new ServiceResponse { Success = false, Message = "An error occurred while creating note." };
         }
     }
 }
