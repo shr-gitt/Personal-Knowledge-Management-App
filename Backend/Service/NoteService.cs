@@ -57,4 +57,22 @@ public class NoteService
             return new ServiceResponse { Success = false, Message = "An error occurred while creating note." };
         }
     }
+
+    public async Task<ServiceResponse> DeleteNote(string id)
+    {
+        if (String.IsNullOrEmpty(id))
+            return new ServiceResponse { Success = false, Message = "Note Id is null" };
+
+        try
+        {
+            await _notes.DeleteOneAsync(id);
+            _logger.LogInformation("Note deleted for user {userId}", id);
+            return new ServiceResponse { Success = true, Message = "Note deleted" };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex,"Note deletion failed");
+            return new ServiceResponse { Success = false, Message = "Note deletion failed." };
+        }
+    }
 }

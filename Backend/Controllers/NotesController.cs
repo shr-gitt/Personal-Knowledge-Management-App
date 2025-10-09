@@ -34,6 +34,8 @@ public class NotesController :  ControllerBase
 
     [HttpPost]
     [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateNote([FromBody] CreateNote model)
     {
         if(!ModelState.IsValid)
@@ -54,5 +56,23 @@ public class NotesController :  ControllerBase
             });
         
         return BadRequest(new ApiResponse<string>{Success = false, Message = result.Message});
+    }
+    
+    [HttpPost]
+    [Authorize]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(ApiResponse<string>),200)]
+    [ProducesResponseType(typeof(ApiResponse<string>),400)]
+    public async Task<IActionResult> DeleteNote(string id)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new ApiResponse<string> { Success = false, Message = "Model is invalid" });
+
+        var result = await _noteservice.DeleteNote(id);
+
+        if (result.Success)
+            return Ok(new ApiResponse<string> { Success = true, Message = result.Message });
+
+        return BadRequest(new ApiResponse<string> { Success = false, Message = result.Message });
     }
 }
