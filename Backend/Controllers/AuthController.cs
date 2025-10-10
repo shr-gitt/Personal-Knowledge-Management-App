@@ -19,15 +19,23 @@ public class AuthController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAllUsers()
     {
-        var users = await _authservice.GetAllUsers();
-        return Ok(users);
+        var result = await _authservice.GetAllUsers();
+        
+        if(result.Success)
+            return Ok(new ApiResponse<IEnumerable<ApplicationUser>> { Success = true, Message = result.Message, Data = result.Data });
+        
+        return BadRequest(new ApiResponse<IEnumerable<ApplicationUser>> { Success = false, Message = result.Message});
     }
 
     [HttpGet]
     public async Task<IActionResult> GetUserByUsername(string username)
     {
-        var user = await _authservice.GetUserByUsername(username);
-        return Ok(user);
+        var result = await _authservice.GetUserByUsername(username);
+        
+        if(result.Success)
+            return Ok(new ApiResponse<ApplicationUser> { Success = true, Message = result.Message, Data = result.Data });
+        
+        return BadRequest(new ApiResponse<ApplicationUser> { Success = false, Message = result.Message});
     }
 
     [HttpPost]

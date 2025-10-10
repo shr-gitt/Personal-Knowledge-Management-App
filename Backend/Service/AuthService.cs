@@ -35,13 +35,41 @@ public class AuthService
         _tokenProvider = tokenProvider;
     }
 
-    public Task<IEnumerable<ApplicationUser>> GetAllUsers()
-        => null;
-        //=> await _userManager.GetUserAsync();
-    
-    public async Task<ApplicationUser> GetUserByUsername(string username)
-        => await _userManager.FindByNameAsync(username);
-    
+    public async Task<ServiceResponse<IEnumerable<ApplicationUser>>> GetAllUsers()
+    {
+        try
+        {
+            var users = _userManager.Users;
+
+            _logger.LogInformation("Users found");
+            return new ServiceResponse<IEnumerable<ApplicationUser>>
+                { Success = true, Message = "Found users", Data = users };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return new ServiceResponse<IEnumerable<ApplicationUser>> { Success = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ServiceResponse<ApplicationUser>> GetUserByUsername(string username)
+    {
+        try
+        {
+            var user = await _userManager.FindByNameAsync(username);
+
+            if (user == null)
+                return new ServiceResponse<ApplicationUser> {Success = false, Message = "User not found" };
+
+            return new ServiceResponse<ApplicationUser> {Success = true, Message = "Found user", Data = user};
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return new ServiceResponse<ApplicationUser> {Success = false, Message = ex.Message };
+        }
+    }
+
     public async Task<ServiceResponse<ApplicationUser>> SignUpAccount(SignUpRequest model)
     {
         var existingUser = await _userManager.FindByEmailAsync(model.Email);
