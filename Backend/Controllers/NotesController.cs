@@ -75,4 +75,22 @@ public class NotesController :  ControllerBase
 
         return BadRequest(new ApiResponse<string> { Success = false, Message = result.Message });
     }
+
+    [HttpPost]
+    [Authorize]
+    [Consumes("application/json")]
+    [ProducesResponseType(typeof(ApiResponse<string>), 200)]
+    [ProducesResponseType(typeof(ApiResponse<string>), 400)]
+    public async Task<IActionResult> UpdateNote([FromBody] UpdateNoteRequest model)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(new ApiResponse<string> { Success = false, Message = "Model is invalid" });
+
+        var result = await _noteservice.UpdateNote(model);
+        
+        if(result.Success)
+            return Ok(new ApiResponse<Note>{Success = true, Message = result.Message, Data = result.Data});
+        
+        return BadRequest(new ApiResponse<Note>{Success = false, Message = result.Message});
+    }
 }
