@@ -17,20 +17,27 @@ public class NotesController :  ControllerBase
     {
         _noteservice = noteservice;
     }
-/*
+
     [HttpGet]
     public async Task<IActionResult> GetAllNotes()
     {
         var result = await _noteservice.GetAllNotes();
-        return Ok(result);
+        
+        if (result.Success)
+            return Ok(new ApiResponse<List<Note>>{Success = true, Message = result.Message, Data = result.Data});
+        
+        return BadRequest(new ApiResponse<List<Note>>{Success = false, Message = result.Message, Data = result.Data});
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetNotes([FromQuery] int page)
+    public async Task<IActionResult> GetNote([FromQuery] string id)
     {
-        var result = await _noteservice.GetNote();
-        return Ok(result);
-    }*/
+        var result = await _noteservice.GetNote(id);
+        if(result.Success)
+            return Ok(result);
+        
+        return BadRequest(result);
+    }
 
     [HttpPost]
     [Authorize]

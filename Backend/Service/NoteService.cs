@@ -16,7 +16,39 @@ public class NoteService
         _notes = noteContext.Notes;
         _logger = logger;
     }
-    
+
+    public async Task<ServiceResponse<List<Note>>> GetAllNotes()
+    {
+        try
+        {
+            var notes = await _notes.Find(_ => true).ToListAsync();
+
+            _logger.LogInformation("Notes found");
+            return new ServiceResponse<List<Note>> { Success = true, Message = "Notes found", Data = notes };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return new ServiceResponse<List<Note>> { Success = false, Message = ex.Message };
+        }
+    }
+
+    public async Task<ServiceResponse<Note>> GetNote(string id)
+    {
+        try
+        {
+            var note = await _notes.Find(n => n.Id == id).FirstOrDefaultAsync();
+            
+            _logger.LogInformation("Note found");
+            return new ServiceResponse<Note> {Success = true, Message = "Note found", Data = note};
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return new ServiceResponse<Note> { Success = false, Message = ex.Message };
+        }
+    }
+
     public async Task<ServiceResponse<Note>> CreateNote(CreateNoteRequest noteDto)
     {
         if (string.IsNullOrWhiteSpace(noteDto.Title))
