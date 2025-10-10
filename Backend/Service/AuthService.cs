@@ -42,12 +42,12 @@ public class AuthService
     public async Task<ApplicationUser> GetUserByUsername(string username)
         => await _userManager.FindByNameAsync(username);
     
-    public async Task<ServiceResponse> SignUpAccount(SignUpRequest model)
+    public async Task<ServiceResponse<ApplicationUser>> SignUpAccount(SignUpRequest model)
     {
         var existingUser = await _userManager.FindByEmailAsync(model.Email);
         if (existingUser != null)
         {
-            return new ServiceResponse
+            return new ServiceResponse<ApplicationUser>
             {
                 Success = false,
                 Message = "Email is already in use."
@@ -65,7 +65,7 @@ public class AuthService
             catch (Exception ex)
             {
                 _logger.LogWarning($"Failed to upload image: {ex.Message}");
-                return new ServiceResponse
+                return new ServiceResponse<ApplicationUser>
                 {
                     Success = false,
                     Message = "Error uploading image. Please try again later."
@@ -88,36 +88,38 @@ public class AuthService
             if (result.Succeeded)
             {
                 _logger.LogInformation("User created a new account with password.");
-                return new ServiceResponse
+                return new ServiceResponse<ApplicationUser>
                 {
                     Success = true,
-                    Message = "Sign-up successful."
+                    Message = "Sign-up successful.",
+                    Data = user
                 };
             }
 
             // If user creation fails, return the errors
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            return new ServiceResponse
+            return new ServiceResponse<ApplicationUser>
             {
                 Success = false,
                 Message = "Sign-up failed.",
-                Data = errors
-            };        }
+                //Data = errors
+            };        
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during sign-up");
-            return new ServiceResponse { Success = false, Message = $"Sign-up failed: {ex.Message}" };
+            return new ServiceResponse<ApplicationUser> { Success = false, Message = $"Sign-up failed: {ex.Message}" };
         }
     }
 
-    public async Task<ServiceResponse> SignInAccount(SignInRequest model)
+    public async Task<ServiceResponse<ApplicationUser>> SignInAccount(SignInRequest model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user == null)
         {
             _logger.LogWarning("User not found");
-            return new ServiceResponse { Success = false, Message = "Invalid email or password." };
+            return new ServiceResponse<ApplicationUser> { Success = false, Message = "Invalid email or password." };
         }
 
         var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
@@ -140,35 +142,35 @@ public class AuthService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to send two factor login email to {Email}", user.Email);
-                return new ServiceResponse { Success = false, Message = "Failed to send email for Two-factor authentication. Please try again later." };
+                return new ServiceResponse<ApplicationUser> { Success = false, Message = "Failed to send email for Two-factor authentication. Please try again later." };
             }
 
-            return new ServiceResponse { Success = false, Message = "Two-factor Authentication required." };
+            return new ServiceResponse<ApplicationUser> { Success = false, Message = "Two-factor Authentication required." };
         }
         
         if (result.Succeeded)
         {
             _logger.LogInformation("User signed in successfully.");
-            return new ServiceResponse { Success = true, Message = "Sign-in successful." };
+            return new ServiceResponse<ApplicationUser> { Success = true, Message = "Sign-in successful.", Data = user };
         }
 
         if (result.IsLockedOut)
         {
             _logger.LogWarning("User account locked out.");
-            return new ServiceResponse { Success = false, Message = "Account is locked. Please try again later." };
+            return new ServiceResponse<ApplicationUser> { Success = false, Message = "Account is locked. Please try again later." };
         }
 
         if (result.IsNotAllowed)
         {
             _logger.LogWarning("User not allowed to sign in.");
-            return new ServiceResponse { Success = false, Message = "Sign-in not allowed. Please confirm your email or contact support." };
+            return new ServiceResponse<ApplicationUser> { Success = false, Message = "Sign-in not allowed. Please confirm your email or contact support." };
         }
 
         _logger.LogWarning("Invalid login attempt.");
-        return new ServiceResponse { Success = false, Message = "Invalid email or password." };
+        return new ServiceResponse<ApplicationUser> { Success = false, Message = "Invalid email or password." };
     }
 
-    public async Task<ServiceResponse> SignOutAccount()
+    public async Task<ServiceResponse<string>> SignOutAccount()
     {
         try
         {
@@ -179,16 +181,16 @@ public class AuthService
             //await _httpContextAccessor.HttpContext!.SignOutAsync(IdentityConstants.TwoFactorUserIdScheme);
 
             _logger.LogInformation("User signed out successfully.");
-            return new ServiceResponse { Success = true, Message = "Sign Out successful." };
+            return new ServiceResponse<string> { Success = true, Message = "Sign Out successful." };
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during sign out.");
-            return new ServiceResponse { Success = false, Message = "Error occurred during sign out." };
+            return new ServiceResponse<string> { Success = false, Message = "Error occurred during sign out." };
         }
     }
 
-    public async Task<ServiceResponse> UpdateAccount(UpdateProfile model)
+    public async Task<ServiceResponse<ApplicationUser>> UpdateAccount(UpdateProfile model)
     {
         //var existingUser = await _userManager.FindByNameAsync(model.Username);
         
@@ -203,7 +205,7 @@ public class AuthService
             catch (Exception ex)
             {
                 _logger.LogWarning($"Failed to upload image: {ex.Message}");
-                return new ServiceResponse
+                return new ServiceResponse<ApplicationUser>
                 {
                     Success = false,
                     Message = "Error uploading image. Please try again later."
@@ -225,29 +227,31 @@ public class AuthService
             if (result.Succeeded)
             {
                 _logger.LogInformation("User updated.");
-                return new ServiceResponse
+                return new ServiceResponse<ApplicationUser>
                 {
                     Success = true,
-                    Message = "User update successful."
+                    Message = "User update successful.",
+                    Data = user
                 };
             }
 
             // If user creation fails, return the errors
             var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            return new ServiceResponse
+            return new ServiceResponse<ApplicationUser>
             {
                 Success = false,
                 Message = "User update failed.",
-                Data = errors
-            };        }
+                //Data = errors
+            };        
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during user update.");
-            return new ServiceResponse { Success = false, Message = $"User update failed: {ex.Message}" };
+            return new ServiceResponse<ApplicationUser> { Success = false, Message = $"User update failed: {ex.Message}" };
         }
     }
 
-    public async Task<ServiceResponse> DeleteAccount(SignInRequest model)
+    public async Task<ServiceResponse<string>> DeleteAccount(SignInRequest model)
     {
         try
         {
@@ -255,7 +259,7 @@ public class AuthService
             if (user == null)
             {
                 _logger.LogWarning("User not found.");
-                return new ServiceResponse { Success = false, Message = "User not found." };
+                return new ServiceResponse<string> { Success = false, Message = "User not found." };
             }
 
             var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
@@ -263,38 +267,38 @@ public class AuthService
             if (result.Succeeded)
             {
                 _logger.LogInformation("User deleted successfully.");
-                return new ServiceResponse { Success = true, Message = "Account deletion successful." };
+                return new ServiceResponse<string> { Success = true, Message = "Account deletion successful." };
             }
 
             if (result.IsLockedOut)
             {
                 _logger.LogWarning("User account locked out.");
-                return new ServiceResponse { Success = false, Message = "Account is locked. Please try again later." };
+                return new ServiceResponse<string> { Success = false, Message = "Account is locked. Please try again later." };
             }
 
             if (result.IsNotAllowed)
             {
                 _logger.LogWarning("User not allowed to sign in.");
-                return new ServiceResponse { Success = false, Message = "Sign-in not allowed. Please confirm your email or contact support." };
+                return new ServiceResponse<string> { Success = false, Message = "Sign-in not allowed. Please confirm your email or contact support." };
             }
 
             _logger.LogWarning("Invalid login attempt.");
-            return new ServiceResponse { Success = false, Message = "Invalid email or password." };
+            return new ServiceResponse<string> { Success = false, Message = "Invalid email or password." };
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Cannot delete account");
-            return new ServiceResponse {Success = false, Message = $"User account deletion failed: {e.Message}"};
+            return new ServiceResponse<string> {Success = false, Message = $"User account deletion failed: {e.Message}"};
         }
     }
 
-    public async Task<ServiceResponse> ForgotPassword(ForgotPasswordRequest model)
+    public async Task<ServiceResponse<string>> ForgotPassword(ForgotPasswordRequest model)
     {
         try
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
-                return new ServiceResponse { Success = false, Message = "User not found." };
+                return new ServiceResponse<string> { Success = false, Message = "User not found." };
 
             _logger.LogInformation("Forgot password called.");
 
@@ -312,65 +316,64 @@ public class AuthService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to send reset password email to {Email}", user.Email);
-                return new ServiceResponse
+                return new ServiceResponse<string>
                     { Success = false, Message = "Failed to send email for reset password. Please try again later." };
             }
 
-            return new ServiceResponse { Success = true, Message = "Reset password success." };
+            return new ServiceResponse<string> { Success = true, Message = "Reset password success." };
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Cannot forgot password");
-            return new ServiceResponse { Success = false, Message = $"Forgot password failed: {ex.Message}" };
+            return new ServiceResponse<string> { Success = false, Message = $"Forgot password failed: {ex.Message}" };
         }
     }
 
-    public async Task<ServiceResponse> ResetPassword(ResetPasswordRequest model)
+    public async Task<ServiceResponse<string>> ResetPassword(ResetPasswordRequest model)
     {
         try
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
-                return new ServiceResponse { Success = false, Message = "User not found." };
+                return new ServiceResponse<string> { Success = false, Message = "User not found." };
             
             var result = await _userManager.ResetPasswordAsync(user, model.ResetCode, model.NewPassword);
             if (result.Succeeded)
-                return new ServiceResponse { Success = true, Message = "Reset Password success." };
+                return new ServiceResponse<string> { Success = true, Message = "Reset Password success." };
             
-            return new ServiceResponse { Success = false, Message = "Reset password failed." };
+            return new ServiceResponse<string> { Success = false, Message = "Reset password failed." };
         }
         catch (Exception ex)
         {
             _logger.LogError(ex,"Cannot reset password");
-            return new ServiceResponse { Success = false, Message = $"Reset password failed: {ex.Message}" };
+            return new ServiceResponse<string> { Success = false, Message = $"Reset password failed: {ex.Message}" };
         }
     }
 
-    public async Task<ServiceResponse> ChangePassword(ChangePasswordRequest model)
+    public async Task<ServiceResponse<string>> ChangePassword(ChangePasswordRequest model)
     {
         try
         {
             var user = await _userManager.FindByEmailAsync(model.Email);
 
             if (user == null)
-                return new ServiceResponse
+                return new ServiceResponse<string>
                 {
                     Success = false,
                     Message = "User not found.",
-                    Data = default
                 };
 
             var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
 
             if (result.Succeeded)
-                return new ServiceResponse
+                return new ServiceResponse<string>
                 {
                     Success = true,
                     Message = "Password Changed successfully."
                 };
 
-            return new ServiceResponse
+            return new ServiceResponse<string>
             {
                 Success = false,
                 Message = "Password Changed failed."
@@ -379,7 +382,7 @@ public class AuthService
         catch (Exception ex)
         {
             _logger.LogError(ex,"Error changing password");
-            return new ServiceResponse { Success = false, Message = $"Error changing password: {ex.Message}" };
+            return new ServiceResponse<string> { Success = false, Message = $"Error changing password: {ex.Message}" };
         }
     }
 }

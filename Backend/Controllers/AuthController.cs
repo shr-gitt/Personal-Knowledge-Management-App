@@ -1,4 +1,5 @@
 using Backend.DTO;
+using Backend.Models;
 using Backend.Service;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -54,7 +55,7 @@ public class AuthController : ControllerBase
             });
         }
         
-        return BadRequest(new ApiResponse<string>
+        return BadRequest(new ApiResponse<ApplicationUser>
         {
             Success = false,
             Message = "Sign-up failed. Please try again later.",
@@ -159,7 +160,7 @@ public class AuthController : ControllerBase
             });
         }
         
-        return BadRequest(new ApiResponse<string>
+        return BadRequest(new ApiResponse<ApplicationUser>
         {
             Success = false,
             Message = "User update failed. Please try again later.",
