@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using System.Runtime.CompilerServices;
 
 namespace Backend.DTO.NotesDTO;
 
-public class CreateNote
+public class UpdateNoteRequest
 {
+    public required string id { get; set; }
     [Required(ErrorMessage = "UserId is required")]
     public required string UserId { get; set; }
     

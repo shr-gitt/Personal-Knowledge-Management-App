@@ -36,7 +36,7 @@ public class NotesController :  ControllerBase
     [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    public async Task<IActionResult> CreateNote([FromBody] CreateNote model)
+    public async Task<IActionResult> CreateNote([FromBody] CreateNoteRequest model)
     {
         if(!ModelState.IsValid)
             return BadRequest(new ApiResponse<string>
