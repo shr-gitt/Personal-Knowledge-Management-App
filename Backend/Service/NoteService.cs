@@ -10,11 +10,13 @@ public class NoteService
 {
     private readonly IMongoCollection<Note> _notes;
     private readonly ILogger<NoteService> _logger;
+    private readonly Neo4jService _neo4jService;
 
-    public NoteService(NoteContext noteContext,  ILogger<NoteService> logger)
+    public NoteService(NoteContext noteContext,  ILogger<NoteService> logger,  Neo4jService neo4jService)
     {
         _notes = noteContext.Notes;
         _logger = logger;
+        _neo4jService = neo4jService;
     }
 
     public async Task<ServiceResponse<List<Note>>> GetAllNotes()
@@ -70,6 +72,16 @@ public class NoteService
             };
 
             await _notes.InsertOneAsync(note);
+            
+            await _neo4jService.CreateUserNodeAsync(note.UserId,noteDto.UserId);
+            
+            await _neo4jService.CreateNoteNodeAsync(note.Id, noteDto.Title, note.Content,note.UserId);
+
+            foreach (var tag in noteDto.Tags)
+            {
+                await _neo4jService.CreateTagNodeAsync(tag);
+                await _neo4jService.CreateRelationshipNodeAsync(note.Id, tag);
+            }
 
             _logger.LogInformation("Note successfully created for user {userId}", note.UserId);
             return new ServiceResponse<Note> { Success = true, Message = "Note created", Data = note };
@@ -97,6 +109,8 @@ public class NoteService
 
         try
         {
+            await _neo4jService.DeleteNodeAsync(id);
+            
             var deletedNote = await _notes.FindOneAndDeleteAsync(note => note.Id == id);
 
             if (deletedNote == null)
@@ -127,6 +141,12 @@ public class NoteService
                 .Set(n => n.Content, noteDto.Content)
                 .Set(n => n.Tags, noteDto.Tags)
                 .Set(n => n.LastModified, DateTime.UtcNow);
+            
+            foreach (var tag in noteDto.Tags)
+            {
+                await _neo4jService.CreateTagNodeAsync(tag);
+                await _neo4jService.CreateRelationshipNodeAsync(noteDto.id, tag);
+            }
 
             var result = await _notes.FindOneAndUpdateAsync(
                 n => n.Id == noteDto.id && n.UserId == noteDto.UserId,
