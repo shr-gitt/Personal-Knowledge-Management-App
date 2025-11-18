@@ -2,6 +2,8 @@ using Backend;
 using Backend.Controllers;
 using Backend.Data;
 using Backend.Models;
+using Backend.Repositories.Implementations;
+using Backend.Repositories.Interfaces;
 using Backend.Service;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
@@ -108,6 +110,12 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
 builder.Services.AddSingleton<AuthContext>();
 builder.Services.AddSingleton<NoteContext>();
 builder.Services.AddSingleton<IndexService>();
+
+builder.Services.AddScoped<IEmailSender, EmailSender>();
+builder.Services.AddSingleton<UploadImageService>();
+builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<CustomUserManager>();
+builder.Services.AddScoped<TokenProvider<ApplicationUser>>();
 
 builder.Services.AddScoped<NotesController>();
 builder.Services.AddScoped<NoteService>();
