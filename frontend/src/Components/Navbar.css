@@ -1,0 +1,37 @@
+.sidebar {
+    position: fixed;
+    top: 3px;
+    left: 0;
+
+    width: 160px;
+    height: 98vh;
+    
+    background: #7373ac;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    gap: 10px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px;
+    border-radius: 6px;
+    transition: 0.2s;
+}
+
+.bottom {
+    margin-top: auto;   /* ⬅ pushes these items to bottom */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.item:hover {
+    background: #2a2a3f;
+}
