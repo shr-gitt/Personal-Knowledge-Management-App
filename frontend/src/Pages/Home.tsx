@@ -1,11 +1,5 @@
-import Button from "../Components/Button"
-
-interface Props{
-    onLogin : () => void;
-}
-
 const Home = () =>{
-    return  <Button onClick={() => console.log('Login Clicked')} color='secondary'>Login</Button>
+    return  <h1>Home Page</h1>
 }
 
 export default Home
