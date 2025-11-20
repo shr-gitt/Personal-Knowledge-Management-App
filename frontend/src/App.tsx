@@ -2,12 +2,12 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './Pages/Login';
 import Home from './Pages/Home';
-import Search from './Components/Search';
-import CreateNotes from './Components/CreateNotes';
-import GraphView from './Components/GraphView';
-import Trash from './Components/Trash';
-import Settings from './Components/Settings';
-import Profile from './Components/Profile';
+import Search from './Pages/Search';
+import CreateNotes from './Pages/CreateNotes';
+import GraphView from './Pages/GraphView';
+import Trash from './Pages/Trash';
+import Settings from './Pages/Settings';
+import Profile from './Pages/Profile';
 import Layout from './Components/Layout';
 import { useState } from 'react';
 
