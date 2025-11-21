@@ -10,6 +10,7 @@ import Settings from './Pages/Settings';
 import Profile from './Pages/Profile';
 import Layout from './Components/Layout';
 import { useState } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

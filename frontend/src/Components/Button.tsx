@@ -9,15 +9,15 @@ interface Props {
 const Button = ({ children, onClick, color }: Props) => {
     return (
     <button
-        className={"btn btn-" + color}
+        className={"btn btn-"+color}
         onClick={onClick}
-        style={{
+        /*style={{
         padding: '10px 20px',
-        backgroundColor: color === 'primary' ? 'blue' : 'gray',
-        color: 'white',
+        //backgroundColor: color === 'primary' ? 'blue' : 'gray',
+        //color: color,
         border: 'none',
         borderRadius: '5px',
-        }}
+        }}*/
     >
     {children}
     </button>
