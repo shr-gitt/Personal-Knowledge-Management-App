@@ -1,5 +1,6 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import SignUp from './Pages/SignUp'
 import Login from './Pages/Login';
 import Home from './Pages/Home';
 import Search from './Pages/Search';
@@ -22,6 +23,11 @@ function App() {
     <Route 
       path="/login" 
       element={<Login onLogin={() => setIsLoggedIn(true)} />} 
+    />
+
+    <Route 
+      path="/signup" 
+      element={<SignUp />} 
     />
 
     {/* Private route wrapped by Layout */}

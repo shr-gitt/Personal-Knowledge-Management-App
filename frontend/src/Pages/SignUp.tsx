@@ -3,22 +3,21 @@ import { useNavigate, Link } from 'react-router-dom';
 import Logo from '../assets/logo.png';
 import "./Login.css";
 
-interface Props{
-    onLogin : () => void;
-}
-
-const Login = ({onLogin}:Props) =>{
+const Login = () =>{
     const navigate = useNavigate();
-
-    const handleLogin = () =>{
-        onLogin();
-        navigate("/");
-    }
 
     return  <div className="layout">
         <img src={Logo} alt="App Logo" className='logo'/> 
         <h2>Welcome Back</h2>
         <form className="inputForm">
+            <div className="inputs">
+                <label className="labels">Full Name</label>
+                <input type="text" name="Full Name" />
+            </div>
+            <div className="inputs">
+                <label className="labels">UserName</label>
+                <input type="text" name="UserName" />
+            </div>
             <div className="inputs">
                 <label className="labels">Email Address</label>
                 <input type="email" name="Email Address" />
@@ -27,13 +26,13 @@ const Login = ({onLogin}:Props) =>{
                 <label className="labels">Password</label>
                 <input type="password" name="Password" />
             </div>
+            <div className="inputs">
+                <label className="labels">Confirm Password</label>
+                <input type="password" name="Confirm Password" />
+            </div>
         </form>
 
-        <Button onClick={handleLogin} color='primary'>Login</Button>
-        <div className="signIn">
-            <label className="labels">New User?</label>
-            <Button onClick={() => navigate("/SignUp")} color='link'>Sign In</Button>
-        </div>
+        <Button onClick={() => navigate("/")} color='primary'>Create Account</Button>
     </div>
 }
 
