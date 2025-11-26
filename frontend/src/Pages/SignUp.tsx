@@ -32,7 +32,7 @@ const Login = () =>{
             </div>
         </form>
 
-        <Button onClick={() => navigate("/")} color='primary'>Create Account</Button>
+        <Button onClick={() => navigate("/login")} color='primary'>Create Account</Button>
     </div>
 }
 
