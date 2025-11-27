@@ -1,0 +1,27 @@
+.note-card{
+    display: flex;
+    flex-direction: column;
+
+    width: calc(100vw - 270px);
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.title-bar{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.dates{
+    align-self: flex-end;
+    font-size: 14px;
+    font-weight: lighter;
+}
+
+.information{
+    font-size: 16px;
+    align-self: flex-start;
+}
