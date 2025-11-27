@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import SignUp from './Pages/SignUp'
 import Login from './Pages/Login';
 import Home from './Pages/Home';
-import Search from './Pages/Search';
 import CreateNotes from './Pages/CreateNotes';
 import GraphView from './Pages/GraphView';
 import Trash from './Pages/Trash';
@@ -37,10 +36,6 @@ function App() {
       <Route 
         path="/" 
         element={isLoggedIn ? <Home /> : <Navigate to="/login" />} 
-      />
-      <Route 
-        path="/search" 
-        element={isLoggedIn ? <Search /> : <Navigate to="/login" />} 
       />  
       <Route 
         path="/create_notes" 

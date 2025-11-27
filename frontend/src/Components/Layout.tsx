@@ -10,7 +10,7 @@ const Layout = () => {
     return (
     <div style={{display:"flex"}}>
         <Navbar />
-        <div style={{marginLeft:"160px", padding: '20px', width:"100%" }}>
+        <div style={{marginLeft:"160px", width:"100%" }}>
         <Outlet /> {/* This renders the page content */}
         </div>
     </div>
