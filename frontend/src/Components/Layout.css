@@ -5,7 +5,7 @@
 }
 
 .content {
-    margin-top: 80px;  /* same height as navbar */
+    margin-top: 60px;  /* same height as navbar */
     overflow-y: auto;
     height: calc(100vh - 60px);
 }

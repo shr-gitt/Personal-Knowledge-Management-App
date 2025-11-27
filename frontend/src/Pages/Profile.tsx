@@ -4,6 +4,7 @@ import "./Profile.css"
 const Profile = () =>{
     const navigate = useNavigate();
     return  <div>
+        <br/>
         <h3 className="information">Username: Username</h3>
         <h3 className="information">Name: Name</h3>
         <h3 className="information">Email Address: Email</h3>

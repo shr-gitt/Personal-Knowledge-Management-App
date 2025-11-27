@@ -15,24 +15,28 @@ const Login = ({onLogin}:Props) =>{
         navigate("/");
     }
 
-    return  <div className="layout">
-        <img src={Logo} alt="App Logo" className='logo'/> 
-        <h2>Welcome Back</h2>
-        <form className="inputForm">
-            <div className="inputs">
-                <label className="labels">Email Address</label>
-                <input type="email" name="Email Address" />
-            </div>
-            <div className="inputs">
-                <label className="labels">Password</label>
-                <input type="password" name="Password" />
-            </div>
-        </form>
+    return  <div className="login-page">
+        
+        <div className="login-box">
+            <img src={Logo} alt="App Logo" className='start-logo'/> 
 
-        <Button onClick={handleLogin} color='primary'>Login</Button>
-        <div className="signIn">
-            <label className="labels">New User?</label>
-            <Button onClick={() => navigate("/SignUp")} color='link'>Sign In</Button>
+            <h2>Welcome Back</h2>
+            <form className="inputForm">
+                <div className="inputs">
+                    <label className="labels">Email Address</label>
+                    <input type="email" name="Email Address" />
+                </div>
+                <div className="inputs">
+                    <label className="labels">Password</label>
+                    <input type="password" name="Password" />
+                </div>
+            </form>
+
+            <Button onClick={handleLogin} color='primary'>Login</Button>
+            <div className="signIn">
+                <label className="labels">New User?</label>
+                <Button onClick={() => navigate("/SignUp")} color='link'>Sign In</Button>
+            </div>
         </div>
     </div>
 }

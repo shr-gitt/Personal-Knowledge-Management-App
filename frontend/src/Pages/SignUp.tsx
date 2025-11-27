@@ -6,8 +6,8 @@ import "./Login.css";
 const Login = () =>{
     const navigate = useNavigate();
 
-    return  <div className="layout">
-        <img src={Logo} alt="App Logo" className='logo'/> 
+    return  <div className="login-box">
+        <img src={Logo} alt="App Logo" className='start-logo'/> 
         <h2>Welcome Back</h2>
         <form className="inputForm">
             <div className="inputs">
