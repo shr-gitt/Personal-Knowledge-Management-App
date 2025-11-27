@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import Navbar from './Navbar';
 import { Outlet } from 'react-router-dom';
+import "./Layout.css"
 
 interface Props {
     children: ReactNode;
@@ -8,9 +9,9 @@ interface Props {
 
 const Layout = () => {
     return (
-    <div style={{display:"flex"}}>
+    <div className='pageContainer'>
         <Navbar />
-        <div style={{marginLeft:"160px", width:"100%" }}>
+        <div className='content'>
         <Outlet /> {/* This renders the page content */}
         </div>
     </div>

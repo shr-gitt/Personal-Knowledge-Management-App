@@ -1,18 +1,17 @@
-.logo{
-    direction: flex;
-    align-self: center;
-    height: 100px;
-    width: 100px;
-}
-
 .pageContainer {
     display: flex;
     flex-direction: column;
-    height: 100vh;         
+    align-items: flex-start;
+    height: 100vh;
+    gap:5px;    
+}
+
+.pageContainer>h1{
+    justify-content:left;
 }
 
 .searchBar{
-    width: calc(100vw - 270px);
+    width: 90vh;
     padding: 5px;
     margin-bottom: 20px;
 }

@@ -1,10 +1,8 @@
-import Logo from "../assets/logo.png"
 import NotesCard from "../Components/NotesCard"
 import "./Home.css"
 
 const Home = () =>{
     return  <div className="pageContainer">
-        <img src={Logo} alt="App Logo" className='logo'/> 
         <h1>Your Notes</h1>
         <input type="search" placeholder="Search" className="searchBar"/>
 

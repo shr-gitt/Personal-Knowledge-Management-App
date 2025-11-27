@@ -3,12 +3,12 @@
     top: 3px;
     left: 0;
 
-    width: 170px;
-    height: 98vh;
+    width: 100%;
+    height: 10vh;
     
     background: #7373ac;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     padding: 5px;
     gap: 10px;
 }
@@ -26,12 +26,25 @@
 }
 
 .bottom {
-    margin-top: auto;   /* ⬅ pushes these items to bottom */
+    margin-left: auto;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 20px;
 }
 
 .item:hover {
     background: #2a2a3f;
+}
+
+.logo{
+    position: fixed;
+    left:50%;
+
+    margin-top: 3px;
+    
+    direction: flex;
+    align-self: center;
+    
+    height: 100px;
+    width: 100px;
 }

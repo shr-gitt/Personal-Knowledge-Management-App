@@ -1,0 +1,11 @@
+.pageContainer{
+    display:"flex";
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.content {
+    margin-top: 80px;  /* same height as navbar */
+    overflow-y: auto;
+    height: calc(100vh - 60px);
+}
