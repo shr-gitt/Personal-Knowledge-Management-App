@@ -8,6 +8,11 @@ import GraphView from './Pages/GraphView';
 import Trash from './Pages/Trash';
 import Settings from './Pages/Settings';
 import Profile from './Pages/Profile';
+import EditInfo from './Pages/Profile/editInformation';
+import ChangePassword from './Pages/Profile/changePassword';
+import VerifyEmail from './Pages/Profile/verifyAccount';
+import TwoFA from './Pages/Profile/2FA';
+import DeleteAccount from './Pages/Profile/deleteAccount';
 import Layout from './Components/Layout';
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -57,6 +62,26 @@ function App() {
         path="/profile" 
         element={isLoggedIn ? <Profile /> : <Navigate to="/login" />} 
       />
+      <Route 
+        path="/EditInfo" 
+        element={isLoggedIn ? <EditInfo /> : <Navigate to="/login" />} 
+      />  
+      <Route 
+        path="/ChangePassword" 
+        element={isLoggedIn ? <ChangePassword /> : <Navigate to="/login" />} 
+      />  
+      <Route 
+        path="/VerifyEmail" 
+        element={isLoggedIn ? <VerifyEmail /> : <Navigate to="/login" />} 
+      />  
+      <Route 
+        path="/TwoFA" 
+        element={isLoggedIn ? <TwoFA /> : <Navigate to="/login" />} 
+      />  
+      <Route 
+        path="/DeleteAccount" 
+        element={isLoggedIn ? <DeleteAccount /> : <Navigate to="/login" />} 
+      />  
     </Route>
   </Routes>
 </Router>
