@@ -180,7 +180,7 @@ public class AuthController : ControllerBase
     [Consumes("application/json")]
     [ProducesResponseType(typeof(ApiResponse<string>), 200)]
     [ProducesResponseType(typeof(ApiResponse<string>), 400)]
-    public async Task<IActionResult> DeleteUserProfile(SignInRequest model)
+    public async Task<IActionResult> DeleteUserProfile(DeleteAccountRequest model)
     {
         if (!ModelState.IsValid)
             return BadRequest(new ApiResponse<string>{

@@ -220,7 +220,16 @@ public class AuthService
 
     public async Task<ServiceResponse<ApplicationUser>> UpdateAccount(UpdateProfile model)
     {
-        //var existingUser = await _userManager.FindByNameAsync(model.Username);
+        var existingUser = await _userManager.FindByEmailAsync(model.Email);
+        
+        if (existingUser == null)
+        {
+            return new ServiceResponse<ApplicationUser>
+            {
+                Success = false,
+                Message = "User not found."
+            };
+        }
         
         string imagePath = "";
         if (model.Image != null)
@@ -240,18 +249,15 @@ public class AuthService
                 };
             }            
         }
-        
-        var user = new ApplicationUser
-        {
-            UserName = model.Username,
-            Name = model.Name,
-            PhoneNumber = model.Phone,
-            Image = imagePath
-        };
+
+        existingUser.UserName = model.Username;
+        existingUser.Name = model.Name;
+        existingUser.PhoneNumber = model.Phone;
+        existingUser.Image = imagePath;
         
         try
         {
-            var result = await _userManager.UpdateAsync(user);
+            var result = await _userManager.UpdateAsync(existingUser);
             if (result.Succeeded)
             {
                 _logger.LogInformation("User updated.");
@@ -259,7 +265,7 @@ public class AuthService
                 {
                     Success = true,
                     Message = "User update successful.",
-                    Data = user
+                    Data = existingUser
                 };
             }
 
@@ -279,7 +285,7 @@ public class AuthService
         }
     }
 
-    public async Task<ServiceResponse<string>> DeleteAccount(SignInRequest model)
+    public async Task<ServiceResponse<string>> DeleteAccount(DeleteAccountRequest model)
     {
         try
         {
