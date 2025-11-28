@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "hFwyrzz9FqZ3hJbNS1a3e8n3/4lscTN9V82gml4Yz3o=",
+  "Hash": "iRnvNXm9F2JwXyeh54afk8nJn+83TsZUhxkzFMieN3U=",
   "Source": "Backend",
   "BasePath": "_content/Backend",
   "Mode": "Default",
@@ -1443,6 +1443,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/favicon.ico"
+    },
+    {
+      "Identity": "/Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/wwwroot/Images/f880a45b-4186-437b-8c95-f0173447049f.jpg",
+      "SourceId": "Backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "/Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/wwwroot/",
+      "BasePath": "_content/Backend",
+      "RelativePath": "Images/f880a45b-4186-437b-8c95-f0173447049f#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "vafntrzxz8",
+      "Integrity": "yVmAXD3ogqPIlQyysailplvGCEG64CRASNfdgRAfAMI=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot/Images/f880a45b-4186-437b-8c95-f0173447049f.jpg"
     },
     {
       "Identity": "/Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/wwwroot/js/site.js",
@@ -3916,6 +3937,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-+/824NtfTA0L7Mr42Fo+86YJP4R5cigdi9S7Fx5VVl4="
+        }
+      ]
+    },
+    {
+      "Route": "Images/f880a45b-4186-437b-8c95-f0173447049f.jpg",
+      "AssetFile": "/Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/wwwroot/Images/f880a45b-4186-437b-8c95-f0173447049f.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3199502"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"yVmAXD3ogqPIlQyysailplvGCEG64CRASNfdgRAfAMI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 18 Nov 2025 06:51:58 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-yVmAXD3ogqPIlQyysailplvGCEG64CRASNfdgRAfAMI="
+        }
+      ]
+    },
+    {
+      "Route": "Images/f880a45b-4186-437b-8c95-f0173447049f.vafntrzxz8.jpg",
+      "AssetFile": "/Users/mandipshrestha/Documents/Personal-Knowledge-Management-App/Backend/wwwroot/Images/f880a45b-4186-437b-8c95-f0173447049f.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "3199502"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"yVmAXD3ogqPIlQyysailplvGCEG64CRASNfdgRAfAMI=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Tue, 18 Nov 2025 06:51:58 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "vafntrzxz8"
+        },
+        {
+          "Name": "label",
+          "Value": "Images/f880a45b-4186-437b-8c95-f0173447049f.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-yVmAXD3ogqPIlQyysailplvGCEG64CRASNfdgRAfAMI="
         }
       ]
     },
