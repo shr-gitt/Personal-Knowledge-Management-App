@@ -40,7 +40,7 @@ public class NotesController :  ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    //[Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public async Task<IActionResult> CreateNote([FromBody] CreateNoteRequest model)
@@ -66,7 +66,7 @@ public class NotesController :  ControllerBase
     }
     
     [HttpPost]
-    [Authorize]
+    //[Authorize]
     [Consumes("application/json")]
     [ProducesResponseType(typeof(ApiResponse<string>),200)]
     [ProducesResponseType(typeof(ApiResponse<string>),400)]
@@ -84,7 +84,7 @@ public class NotesController :  ControllerBase
     }
 
     [HttpPost]
-    [Authorize]
+    //[Authorize]
     [Consumes("application/json")]
     [ProducesResponseType(typeof(ApiResponse<string>), 200)]
     [ProducesResponseType(typeof(ApiResponse<string>), 400)]
