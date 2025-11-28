@@ -122,11 +122,11 @@ builder.Services.AddScoped<NoteService>();
 builder.Services.AddScoped<Neo4jService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
-    var uri = configuration["Neo4j:Uri"];
-    var username = configuration["Neo4j:UserName"];
-    var password = configuration["Neo4j:Password"];
+    var uri = configuration["Neo4jSettings:Uri"]; 
+    var username = configuration["Neo4jSettings:UserName"];
+    var password = configuration["Neo4jSettings:Password"];
     var logger = provider.GetRequiredService<ILogger<Neo4jService>>();
-    return new Neo4jService(uri, username, password, logger);
+    return new Neo4jService(uri!, username!, password!, logger);
 });
 
 // Register Swagger services
