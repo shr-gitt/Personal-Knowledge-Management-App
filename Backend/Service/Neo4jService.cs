@@ -145,7 +145,7 @@ public class Neo4jService
         }
         finally
         {
-            await session.CloseAsync();
+            //await session.CloseAsync(); no need because used var session = _driver.AsyncSession(); so this automatically closes the session
         }
     }
 }
