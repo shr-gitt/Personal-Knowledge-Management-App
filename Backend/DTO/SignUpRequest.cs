@@ -22,6 +22,11 @@ public class SignUpRequest
     [StringLength(25, MinimumLength = 7, ErrorMessage = "Password must be between 7 and 25 characters")]
     [DataType(DataType.Password)]
     public required string Password { get; set; }
+   
+    [Required]
+    [StringLength(25, MinimumLength = 7, ErrorMessage = "Password must be between 7 and 25 characters")]
+    [DataType(DataType.Password)]
+    public required string ConfirmPassword { get; set; }
     
     public IFormFile? Image { get; set; }
 }

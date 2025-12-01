@@ -2,7 +2,7 @@ const baseUrl = 'https://localhost:7032/api'
 const baseAuth = `${baseUrl}/Auth`
 const baseNotes = `${baseUrl}/Notes`
 
-export const apis = {
+const apis = {
     auth: {
         getAllUsers: `${baseAuth}/GetAllUsers`,
         getUserByUsername: `${baseAuth}/GetUserByUsername`,
@@ -24,3 +24,5 @@ export const apis = {
         update: `${baseNotes}/UpdateNote`,
     },
 };
+
+export default apis;
