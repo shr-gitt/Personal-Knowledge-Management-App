@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "../Components/Button"
 import { useNavigate, Link } from 'react-router-dom';
+import '../types/assets.d.ts'
 import Logo from '../assets/logo.png';
 import "./Login.css";
 import {SignUp} from '../Service/authService';
@@ -39,12 +40,21 @@ const Login = () =>{
         }
 
         try {
-        const response = await SignUp(formData); // call your service
-        console.log(response);
-        navigate("/login"); // redirect after success
+            const payload = new FormData();
+            payload.append("Username", formData.Username);
+            payload.append("Name", formData.Name);
+            payload.append("Phone", formData.Phone ?? "");
+            payload.append("Email", formData.Email);
+            payload.append("Password", formData.Password);
+            payload.append("ConfirmPassword", formData.ConfirmPassword);
+
+            //if (file) payload.append("Image", file);
+
+            await SignUp(payload);
+            navigate("/login");
         } catch (error) {
-        console.error(error);
-        alert("Registration failed");
+            console.error(error);
+            alert("Registration failed");
         }
     };
 
@@ -63,6 +73,10 @@ const Login = () =>{
             <div className="inputs">
                 <label className="labels">Email Address</label>
                 <input type="email" name="Email" value={formData.Email} onChange={handleChange} />
+            </div>
+            <div className="inputs">
+                <label className="labels">Phone</label>
+                <input type="tel" name="Phone" value={formData.Phone} onChange={handleChange} />
             </div>
             <div className="inputs">
                 <label className="labels">Password</label>

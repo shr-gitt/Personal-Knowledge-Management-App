@@ -1,20 +1,36 @@
 import apis from '../Config/api';
 import { SignUpRequest, Response } from '../Dtos/Auth';
 
-export async function SignUp(data: SignUpRequest): Promise<Response> {
+export async function SignUp(data: FormData): Promise<Response> {
+    console.log("FormData contents:");
+    for (const [key, value] of data.entries()) {
+        console.log(key, value);
+    }
     const response = await fetch(apis.auth.register, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
+        body: data,
     });
+
+    console.log(response);
 
     // Parse the response body as JSON
     const body: Response = await response.json();
 
+    console.log(body);
+    console.error(body);
+
     // Now check the backend's success flag
-    if (!body.success) {
-        throw new Error(body.message);
+    
+    const Data = body.Data ?? null;
+
+    if (!body.Success) {
+        console.log(body.Message);
+        throw new Error(body.errors
+                ? Object.values(body.errors).flat().join("\n")
+                : body.Message || "Registration failed");
     }
 
-    return body; // entire ApiResponse object
+    // Return shape expected by frontend
+    return body;
+
 }

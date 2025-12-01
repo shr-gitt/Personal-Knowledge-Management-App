@@ -11,7 +11,6 @@ public class SignUpRequest
     public required string Name { get; set; }
     
     [Required]
-    [Phone]
     public required string Phone { get; set; }
     
     [Required]

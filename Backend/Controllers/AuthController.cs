@@ -45,13 +45,20 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Register([FromForm] SignUpRequest model)
     {
         if (!ModelState.IsValid)
-            return BadRequest(new ApiResponse<string>
+        {
+            var errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
+
+            return BadRequest(new ApiResponse<List<string>>
             {
                 Success = false,
                 Message = "Model is invalid",
-                Data = default
+                Data = errors
             });
-
+        }
+        
         var result = await _authservice.SignUpAccount(model);
         if (result.Success)
         {

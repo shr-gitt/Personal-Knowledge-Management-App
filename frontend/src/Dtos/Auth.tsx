@@ -5,11 +5,11 @@ export interface SignUpRequest {
     Email: string;
     Password: string;
     ConfirmPassword: string;
-    Image?: string; // optional
+    Image?: File| string; // optional
 }
 
 export interface Response {
-    success: boolean,
-    message: string,
-    data: string;
+    Success: boolean,
+    Message: string,
+    Data: string;
 }
