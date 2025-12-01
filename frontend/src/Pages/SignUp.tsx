@@ -46,7 +46,6 @@ const Login = () =>{
             payload.append("Phone", formData.Phone ?? "");
             payload.append("Email", formData.Email);
             payload.append("Password", formData.Password);
-            payload.append("ConfirmPassword", formData.ConfirmPassword);
 
             //if (file) payload.append("Image", file);
 

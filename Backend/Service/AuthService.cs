@@ -129,7 +129,7 @@ public class AuthService
             return new ServiceResponse<ApplicationUser>
             {
                 Success = false,
-                Message = "Sign-up failed.",
+                Message = errors,
                 //Data = errors
             };        
         }

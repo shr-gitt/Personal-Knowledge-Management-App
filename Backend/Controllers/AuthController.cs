@@ -70,11 +70,11 @@ public class AuthController : ControllerBase
             });
         }
         
-        return BadRequest(new ApiResponse<ApplicationUser>
+        return BadRequest(new ApiResponse<string>
         {
             Success = false,
             Message = "Sign-up failed. Please try again later.",
-            Data = result.Data
+            Data = result.Message
         });
     }
 

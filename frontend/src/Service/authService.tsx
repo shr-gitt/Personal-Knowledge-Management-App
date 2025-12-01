@@ -23,11 +23,11 @@ export async function SignUp(data: FormData): Promise<Response> {
     
     const Data = body.Data ?? null;
 
-    if (!body.Success) {
-        console.log(body.Message);
+    if (!body.success) {
+        console.log(body.message);
         throw new Error(body.errors
                 ? Object.values(body.errors).flat().join("\n")
-                : body.Message || "Registration failed");
+                : body.message || "Registration failed");
     }
 
     // Return shape expected by frontend
