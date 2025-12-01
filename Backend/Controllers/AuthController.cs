@@ -82,7 +82,7 @@ public class AuthController : ControllerBase
     [Consumes("application/json")]
     [ProducesResponseType(typeof(ApiResponse<string>), 200)]
     [ProducesResponseType(typeof(ApiResponse<string>), 400)]
-    public async Task<IActionResult> LogIn(SignInRequest model)
+    public async Task<IActionResult> LogIn([FromBody]SignInRequest model)
     {
         if (!ModelState.IsValid)
         {

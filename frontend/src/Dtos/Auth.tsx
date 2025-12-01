@@ -8,6 +8,12 @@ export interface SignUpRequest {
     Image?: File| string; // optional
 }
 
+export interface SignInRequest {
+    Email: string;
+    Password: string;
+    RememberMe: boolean;
+}
+
 export interface Response {
     Success: boolean,
     Message: string,
