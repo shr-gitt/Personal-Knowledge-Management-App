@@ -1,13 +1,46 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Button from "../Components/Button";
 import { useNavigate } from "react-router-dom";
 import './CreateNotes.css'
+import { CreateNote } from "../Service/noteService";
 
 const CreateNotes = () =>{
     const [text, setText] = useState("");
 
     const title = text.split("\n")[0];
     const body = text.split("\n").slice(1).join("\n");
+
+    const saveNote = async () => {
+        if (!text.trim()) return;
+
+        return await CreateNote({
+            UserId: localStorage.getItem("username"),
+            Title: title,
+            Content: body
+        });
+    };
+
+    // Auto-save on navigation (component unmount)
+    useEffect(() => {
+        return () => {
+            saveNote(); // not awaited, but triggers
+        };
+    }, []);
+
+    // Save to localStorage on tab close (backend won't work here)
+    useEffect(() => {
+        const handleUnload = () => {
+            localStorage.setItem("draftNote", text);
+        };
+        window.addEventListener("beforeunload", handleUnload);
+        return () => window.removeEventListener("beforeunload", handleUnload);
+    }, [text]);
+
+    // Proper async handler
+    const handleSaveClick = async () => {
+        await saveNote();
+        navigate("/");
+    };
 
     const navigate = useNavigate();
 
@@ -20,7 +53,7 @@ const CreateNotes = () =>{
             placeholder="Write new note here."
         />
         <div className="saveButton">
-            <Button onClick={() => navigate("/")} color="primary">Save</Button>
+            <Button onClick={handleSaveClick} color="primary">Save</Button>
         </div>
     </div>)
 }

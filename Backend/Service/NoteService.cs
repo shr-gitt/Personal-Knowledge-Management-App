@@ -77,11 +77,12 @@ public class NoteService
             
             await _neo4jService.CreateNoteNodeAsync(note.Id, noteDto.Title, note.Content,note.UserId);
 
-            foreach (var tag in noteDto.Tags)
-            {
-                await _neo4jService.CreateTagNodeAsync(tag);
-                await _neo4jService.CreateRelationshipNodeAsync(note.Id, tag);
-            }
+            if(noteDto.Tags != null)
+                foreach (var tag in noteDto.Tags)
+                {
+                    await _neo4jService.CreateTagNodeAsync(tag);
+                    await _neo4jService.CreateRelationshipNodeAsync(note.Id, tag);
+                }
 
             _logger.LogInformation("Note successfully created for user {userId}", note.UserId);
             return new ServiceResponse<Note> { Success = true, Message = "Note created", Data = note };
