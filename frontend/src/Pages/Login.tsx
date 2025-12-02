@@ -14,6 +14,7 @@ const Login = ({onLogin}:Props) =>{
 
     const handleLogin = (username: string) =>{
         localStorage.setItem("username",username);
+        localStorage.setItem("isLoggedIn", true);
         onLogin();
         navigate("/");
     }

@@ -14,11 +14,18 @@ import VerifyEmail from './Pages/Profile/verifyAccount';
 import TwoFA from './Pages/Profile/2FA';
 import DeleteAccount from './Pages/Profile/deleteAccount';
 import Layout from './Components/Layout';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(null);
+
+    useEffect(() => {
+      const loggedIn = localStorage.getItem("isLoggedIn");
+      if (loggedIn) {
+        setIsLoggedIn(true);
+      }
+    }, []);  
 
   return (
     <Router>
@@ -40,7 +47,9 @@ function App() {
     >
       <Route 
         path="/" 
-        element={isLoggedIn ? <Home /> : <Navigate to="/login" />} 
+        element={isLoggedIn === null 
+          ? <div>Loading...</div> 
+          : isLoggedIn ? <Home /> : <Navigate to="/login" />} 
       />  
       <Route 
         path="/create_notes" 
