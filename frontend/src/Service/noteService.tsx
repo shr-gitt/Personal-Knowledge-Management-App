@@ -1,6 +1,24 @@
 import { CreateNoteRequest, Response } from "../Dtos/Notes";
 import apis from '../Config/api';
 
+export async function FetchAllNotes(){
+    const response = await fetch(apis.notes.getAll)
+    const body: Response = await response.json();
+
+    console.log(body);
+
+    if(body.success){
+        console.log(`fetch all posts success:`,body.data);
+        return body.data;
+    }else{
+        throw new Error(body.errors
+            ? Object.values(body.errors).flat().join("\n")
+            : body.message || "Fetch all Notes failed");
+    }
+
+    return body.data;
+}
+
 export async function CreateNote(data: CreateNoteRequest): Promise<string>{
     console.log(`Create Note data is:`,data);
 
