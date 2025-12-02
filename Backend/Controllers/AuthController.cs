@@ -113,7 +113,7 @@ public class AuthController : ControllerBase
             {
                 Success = true,
                 Message = "Sign In Successful",
-                Data = default
+                Data = result.Data,
             });
         }
 

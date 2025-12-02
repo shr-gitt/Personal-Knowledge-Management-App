@@ -140,14 +140,14 @@ public class AuthService
         }
     }
 
-    public async Task<ServiceResponse<ApplicationUser>> SignInAccount(SignInRequest model)
+    public async Task<ServiceResponse<string>> SignInAccount(SignInRequest model)
     {
         var user = await _userManager.FindByEmailAsync(model.Email);
 
         if (user == null)
         {
             _logger.LogWarning("User not found");
-            return new ServiceResponse<ApplicationUser> { Success = false, Message = "Invalid email or password." };
+            return new ServiceResponse<string> { Success = false, Message = "Invalid email or password." };
         }
 
         var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, false);
@@ -170,32 +170,32 @@ public class AuthService
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Failed to send two factor login email to {Email}", user.Email);
-                return new ServiceResponse<ApplicationUser> { Success = false, Message = "Failed to send email for Two-factor authentication. Please try again later." };
+                return new ServiceResponse<string> { Success = false, Message = "Failed to send email for Two-factor authentication. Please try again later." };
             }
 
-            return new ServiceResponse<ApplicationUser> { Success = false, Message = "Two-factor Authentication required." };
+            return new ServiceResponse<string> { Success = false, Message = "Two-factor Authentication required." };
         }
         
         if (result.Succeeded)
         {
             _logger.LogInformation("User signed in successfully.");
-            return new ServiceResponse<ApplicationUser> { Success = true, Message = "Sign-in successful.", Data = user };
+            return new ServiceResponse<string> { Success = true, Message = "Sign-in successful.", Data = user.UserName };
         }
 
         if (result.IsLockedOut)
         {
             _logger.LogWarning("User account locked out.");
-            return new ServiceResponse<ApplicationUser> { Success = false, Message = "Account is locked. Please try again later." };
+            return new ServiceResponse<string> { Success = false, Message = "Account is locked. Please try again later." };
         }
 
         if (result.IsNotAllowed)
         {
             _logger.LogWarning("User not allowed to sign in.");
-            return new ServiceResponse<ApplicationUser> { Success = false, Message = "Sign-in not allowed. Please confirm your email or contact support." };
+            return new ServiceResponse<string> { Success = false, Message = "Sign-in not allowed. Please confirm your email or contact support." };
         }
 
         _logger.LogWarning("Invalid login attempt.");
-        return new ServiceResponse<ApplicationUser> { Success = false, Message = "Invalid email or password." };
+        return new ServiceResponse<string> { Success = false, Message = "Invalid email or password." };
     }
 
     public async Task<ServiceResponse<string>> SignOutAccount()

@@ -12,7 +12,8 @@ interface Props{
 const Login = ({onLogin}:Props) =>{
     const navigate = useNavigate();
 
-    const handleLogin = () =>{
+    const handleLogin = (username: string) =>{
+        localStorage.setItem("username",username);
         onLogin();
         navigate("/");
     }
@@ -43,8 +44,8 @@ const Login = ({onLogin}:Props) =>{
                     RememberMe: formData.RememberMe === "on"
                 };
         
-                await SignIn(payload);
-                handleLogin();
+                const username = await SignIn(payload);
+                handleLogin(username);
             } catch (error) {
                 console.error(error);
                 alert("Login failed");

@@ -1,7 +1,7 @@
 import apis from '../Config/api';
 import { SignUpRequest, Response, SignInRequest } from '../Dtos/Auth';
 
-export async function SignUp(data: FormData): Promise<Response> {
+export async function SignUp(data: FormData): Promise<string> {
     console.log("FormData contents:");
     for (const [key, value] of data.entries()) {
         console.log(key, value);
@@ -17,11 +17,8 @@ export async function SignUp(data: FormData): Promise<Response> {
     const body: Response = await response.json();
 
     console.log(body);
-    console.error(body);
 
     // Now check the backend's success flag
-    
-    const Data = body.Data ?? null;
 
     if (!body.success) {
         console.log(body.message);
@@ -31,11 +28,10 @@ export async function SignUp(data: FormData): Promise<Response> {
     }
 
     // Return shape expected by frontend
-    return body;
-
+    return body.data;
 }
 
-export async function SignIn(data: SignInRequest): Promise<Response> {
+export async function SignIn(data: SignInRequest): Promise<string> {
     console.log('SignIn contents:',data);
 
     const response = await fetch(apis.auth.login, {
@@ -53,8 +49,6 @@ export async function SignIn(data: SignInRequest): Promise<Response> {
     console.error(body);
 
     // Now check the backend's success flag
-    
-    const Data = body.Data ?? null;
 
     if (!body.success) {
         console.log(body.message);
@@ -64,5 +58,5 @@ export async function SignIn(data: SignInRequest): Promise<Response> {
     }
 
     // Return shape expected by frontend
-    return body;
+    return body.data;
 }
