@@ -22,19 +22,7 @@ const Home = () =>{
     return  <div className="pageContainer">
         <h1>Your Notes</h1>
         <input type="search" placeholder="Search" className="searchBar"/>
-        {notes.map(note => (
-                <NotesCard
-                    key={note.id}
-                    notes={[
-                        {
-                            id: note.id,
-                            title: note.title,
-                            content: note.content,
-                            updatedAt: note.lastModified
-                        }
-                    ]}
-                />
-            ))}
+            <NotesCard notes= {notes}/>
         </div>
 }
 
