@@ -22,15 +22,15 @@ const Login = ({onLogin}:Props) =>{
     const [formData, setFormData] = useState<SignInRequest>({            
             Email:"",
             Password:"",
-            RememberMe:""
+            RememberMe:false
         })
     
         // Handle input changes
         const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            const { name, value } = e.target;
+            const { name, value, type, checked } = e.target;
             setFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: type === "checkbox" ? checked : value
             }));
         };
     
@@ -42,7 +42,7 @@ const Login = ({onLogin}:Props) =>{
                 const payload = {
                     Email: formData.Email,
                     Password: formData.Password,
-                    RememberMe: formData.RememberMe === "on"
+                    RememberMe: formData.RememberMe
                 };
         
                 const username = await SignIn(payload);
@@ -68,14 +68,27 @@ const Login = ({onLogin}:Props) =>{
                     <label className="labels">Password</label>
                     <input type="password" name="Password" value={formData.Password} onChange={handleChange}/>
                 </div>
-                <input type="checkbox" name="RememberMe" value={formData.RememberMe} />
+                
                 <Button type="submit" color='primary'>Login</Button>
+                <div className="signIn">
+                    <label className="remember-me">
+                        <input
+                            type="checkbox"
+                            name="RememberMe"
+                            checked={formData.RememberMe}
+                            onChange={handleChange}
+                        />
+                        Remember Me
+                    </label>
+
+                    <label className="new-user">
+                        New User?
+                        <Button onClick={() => navigate("/SignUp")} color='link'>Sign Up</Button>
+                    </label>
+                </div>
             </form>
 
-            <div className="signIn">
-                <label className="labels">New User?</label>
-                <Button onClick={() => navigate("/SignUp")} color='link'>Sign In</Button>
-            </div>
+            
         </div>
     </div>
 }
