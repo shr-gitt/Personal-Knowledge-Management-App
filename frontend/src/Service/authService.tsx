@@ -60,3 +60,20 @@ export async function SignIn(data: SignInRequest): Promise<string> {
     // Return shape expected by frontend
     return body.data;
 }
+
+export async function Logout(){
+    const response = await fetch(apis.auth.logout,{method: "POST"})
+
+    console.log(response);
+
+    const body: Response = await response.json();
+
+    console.log(body);
+
+    if (!body.success) {
+        console.log(body.message);
+        throw new Error(body.errors
+                ? Object.values(body.errors).flat().join("\n")
+                : body.message || "Logout failed");
+    }
+}

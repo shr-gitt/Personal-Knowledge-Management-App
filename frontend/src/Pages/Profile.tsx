@@ -1,7 +1,21 @@
 import { useNavigate } from "react-router-dom"
 import "./Profile.css"
+import {Logout} from '../Service/authService';
 
 const Profile = () =>{
+    const handleLogout = async ()=>{
+        try {
+            await Logout();
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("username");
+            console.log("the current isLoggedIn state is:",localStorage.removeItem("isLoggedIn"))
+            navigate("/login");
+        } catch (error) {
+            console.error(error);
+            alert("Logout failed");
+        }
+    }
+
     const navigate = useNavigate();
     return  <div>
         <br/>
@@ -28,9 +42,8 @@ const Profile = () =>{
             Delete Account
             <span className="chevron">›</span>
         </div>
-        <div onClick={()=>navigate("/login")} className="button">
+        <div onClick={handleLogout} className="button">
             Log Out
-            <span className="chevron">›</span>
         </div>
     </div>
 }
