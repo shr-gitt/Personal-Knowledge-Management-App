@@ -17,7 +17,7 @@ const NotesCard= ({notes}:Props)=>{
             <div key={note.id} className="note-card">
                 <div className="title-bar">
                     <h5 className="title">{note.title}</h5>
-                    <span className="dates">{note.updatedAt}</span>
+                    <span className="dates">{note.lastModified}</span>
                 </div>
                 <p className="information">{note.content}</p>
             </div>
