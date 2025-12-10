@@ -124,6 +124,8 @@ builder.Services.AddScoped<TokenProvider<ApplicationUser>>();
 
 builder.Services.AddScoped<NotesController>();
 builder.Services.AddScoped<NoteService>();
+builder.Services.AddScoped<GraphController>();
+builder.Services.AddScoped<GraphService>();
 builder.Services.AddScoped<Neo4jService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();

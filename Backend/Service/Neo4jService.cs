@@ -148,4 +148,25 @@ public class Neo4jService
             //await session.CloseAsync(); no need because used var session = _driver.AsyncSession(); so this automatically closes the session
         }
     }
+    
+    public async Task<List<IRecord>> RunQuery(string cypher, object parameters)
+    {
+        var session = _driver.AsyncSession();
+        try
+        {
+            var cursor = await session.RunAsync(cypher, parameters);
+    
+            var records = new List<IRecord>();
+            while (await cursor.FetchAsync())
+            {
+                records.Add(cursor.Current);
+            }
+    
+            return records;
+        }
+        finally
+        {
+            await session.CloseAsync();
+        }
+    }
 }
