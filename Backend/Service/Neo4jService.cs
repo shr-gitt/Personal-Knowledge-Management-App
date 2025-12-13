@@ -47,7 +47,7 @@ public class Neo4jService
         try
         {
             var result = await session.RunAsync(
-                "MERGE (u:User{id:$userId})-[:WRITES]->(n:Note {note_id: $noteId, title: $title, content: $content})",
+                "MERGE (u:User{user_id:$userId})-[:WRITES]->(n:Note {note_id: $noteId, title: $title, content: $content})",
                 new {userId, noteId, title, content});
             _logger.LogInformation("Note {note_id} node created or reused", noteId);
         }
@@ -101,7 +101,7 @@ public class Neo4jService
         try
         {
             await session.RunAsync(
-                "MATCH (n:Note {id: $noteId}),(t:Tag {tag_name: $tagName})" +
+                "MATCH (n:Note {note_id: $noteId}),(t:Tag {tag_name: $tagName})" +
                 "MERGE (n)-[:HAS_TAG]->(t)",
                 new { noteId, tagName });
             _logger.LogInformation("Note {note_id} node and Tag {tagName} node relationship created", noteId, tagName);
@@ -129,7 +129,7 @@ public class Neo4jService
         try
         {
             await session.RunAsync(
-                "MATCH (n:Note {id: $noteId}) DETACH DELETE n",
+                "MATCH (n:Note {note_id: $noteId}) DETACH DELETE n",
                 new { nodeId });
             _logger.LogInformation(" {node_id} node deleted", nodeId);
         }

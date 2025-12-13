@@ -19,10 +19,9 @@ public class GraphService
         try
         {
             string cypher = @"
-                MATCH (u:User {id: $username})-[:WRITES]->(n:Note)
-                OPTIONAL MATCH (n)-[:TAGGED_WITH]->(t:Tag)
-                OPTIONAL MATCH (n)-[:LINKS_TO]->(m:Note)
-                RETURN n, t, m
+                MATCH (u:User {user_id: $username})-[:WRITES]->(n:Note)
+                OPTIONAL MATCH (n)-[:HAS_TAG]->(t:Tag)
+                RETURN n, t
             ";
 
             var records = await _neo4jService.RunQuery(cypher, new { username });
@@ -36,8 +35,7 @@ public class GraphService
             {
                 var note = record["n"] as INode;
                 var tag = record["t"] as INode;
-                var linkedNote = record["m"] as INode;
-
+                
                 if (note != null)
                 {
                     nodes.Add(new
@@ -53,7 +51,7 @@ public class GraphService
                     nodes.Add(new
                     {
                         id = tag.ElementId.ToString(),
-                        label = tag.Properties["name"].ToString(),
+                        label = tag.Properties["tag_name"].ToString(),
                         type = "tag"
                     });
 
@@ -64,21 +62,6 @@ public class GraphService
                     });
                 }
 
-                if (linkedNote != null && note != null)
-                {
-                    nodes.Add(new
-                    {
-                        id = linkedNote.Id.ToString(),
-                        label = linkedNote.Properties["title"].ToString(),
-                        type = "note"
-                    });
-
-                    links.Add(new
-                    {
-                        source = note.Id.ToString(),
-                        target = linkedNote.Id.ToString()
-                    });
-                }
             }
 
             return new ServiceResponse<object>
