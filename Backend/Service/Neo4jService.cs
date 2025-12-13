@@ -47,8 +47,8 @@ public class Neo4jService
         try
         {
             var result = await session.RunAsync(
-                "MERGE (n:Note {note_id: $noteId, title: $title, content: $content})-[:WRITES]->(u:User{id:$userId})",
-                new { noteId, title, content, userId });
+                "MERGE (u:User{id:$userId})-[:WRITES]->(n:Note {note_id: $noteId, title: $title, content: $content})",
+                new {userId, noteId, title, content});
             _logger.LogInformation("Note {note_id} node created or reused", noteId);
         }
         catch (Neo4jException neoEx)
@@ -163,6 +163,11 @@ public class Neo4jService
             }
     
             return records;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error occurred while fetching graph '{cypher}'", cypher);
+            throw new Exception($"Unexpected error occurred while handling graph record fetch", ex);
         }
         finally
         {

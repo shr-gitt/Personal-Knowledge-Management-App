@@ -19,13 +19,15 @@ public class GraphService
         try
         {
             string cypher = @"
-                MATCH (u:User {username: $username})-[:OWNS]->(n:Note)
+                MATCH (u:User {id: $username})-[:WRITES]->(n:Note)
                 OPTIONAL MATCH (n)-[:TAGGED_WITH]->(t:Tag)
                 OPTIONAL MATCH (n)-[:LINKS_TO]->(m:Note)
                 RETURN n, t, m
             ";
 
             var records = await _neo4jService.RunQuery(cypher, new { username });
+            
+            _logger.LogInformation($"Graph returned {records.Count} records");
 
             var nodes = new HashSet<object>();
             var links = new HashSet<object>();
