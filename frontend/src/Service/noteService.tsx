@@ -1,4 +1,5 @@
-import { CreateNoteRequest, Response } from "../Dtos/Notes";
+import { CreateNoteRequest} from "../Dtos/Notes";
+import { Response } from "../Dtos/Response";
 import apis from '../Config/api';
 
 export async function FetchAllNotes(){

@@ -13,9 +13,3 @@ export interface SignInRequest {
     Password: string;
     RememberMe: boolean;
 }
-
-export interface Response {
-    Success: boolean,
-    Message: string,
-    Data: string;
-}

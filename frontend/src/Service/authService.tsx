@@ -1,5 +1,6 @@
 import apis from '../Config/api';
-import { SignUpRequest, Response, SignInRequest } from '../Dtos/Auth';
+import { SignInRequest } from '../Dtos/Auth';
+import { Response } from '../Dtos/Response';
 
 export async function SignUp(data: FormData): Promise<string> {
     console.log("FormData contents:");
