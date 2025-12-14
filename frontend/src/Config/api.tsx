@@ -16,6 +16,10 @@ const apis = {
         changePassword: `${baseAuth}/ChangePassword`,
     },
 
+    graph: {
+        fetchUserGraph : `${baseUrl}/Graph/GetUserGraph`
+    },
+
     notes: {
         getAll: `${baseNotes}/GetAllNotes`,
         get: `${baseNotes}/GetNote`,

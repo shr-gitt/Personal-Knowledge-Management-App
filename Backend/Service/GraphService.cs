@@ -40,7 +40,7 @@ public class GraphService
                 {
                     nodes.Add(new
                     {
-                        id = note.ElementId.ToString(),
+                        id = note.ElementId,
                         label = note.Properties["title"].ToString(),
                         type = "note"
                     });
@@ -50,15 +50,15 @@ public class GraphService
                 {
                     nodes.Add(new
                     {
-                        id = tag.ElementId.ToString(),
+                        id = tag.ElementId,
                         label = tag.Properties["tag_name"].ToString(),
                         type = "tag"
                     });
 
                     links.Add(new
                     {
-                        source = note.Id.ToString(),
-                        target = tag.Id.ToString()
+                        source = note.ElementId,
+                        target = tag.ElementId
                     });
                 }
 

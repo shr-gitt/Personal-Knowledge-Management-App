@@ -1,12 +1,24 @@
 import React, {lazy} from 'react';
+import { useEffect, useState } from 'react';
+import { fetchUserGraph } from '../Service/graphService';
 
 const NoSSRForceGraph = lazy(()=> import ('../Config/NoSSRForceGraph'))
 
-const myData = {
-  nodes: [{id:"a"}, {id:"b"}, {id:"c"}],
-  links: [{source: "a", target: "b"}, {source: "c", target: "a"}]
-}
-
 export default function GraphView() {
-  return <NoSSRForceGraph graphData={myData}/>
+  const [data, setData] = useState({ nodes: [], links: [] });
+
+  useEffect (()=>{
+    const fetchData = async () => {
+      try{
+        let Data = await fetchUserGraph();
+        setData(Data);
+      }
+      catch(err){
+        console.error(err);
+      }
+    };
+    fetchData();
+  },[])
+
+  return <NoSSRForceGraph graphData={data}/>
 }
