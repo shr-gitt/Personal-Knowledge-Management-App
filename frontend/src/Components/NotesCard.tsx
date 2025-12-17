@@ -18,7 +18,7 @@ const NotesCard= ({notes}:Props)=>{
             <div key={note.id} className="note-card">
                 <div className="title-bar">
                     <h5 className="title">{note.title}</h5>
-                    <span className="dates">{note.lastModified}<LongMenu /></span>
+                    <span className="dates">{note.lastModified}<LongMenu noteId = {note.id.toString()} /></span>
                     
                 </div>
                 <p className="information">{note.content}</p>

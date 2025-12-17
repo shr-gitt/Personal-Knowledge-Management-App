@@ -18,7 +18,11 @@ const options = [
 
 const ITEM_HEIGHT = 25;
 
-export default function LongMenu() {
+interface Props {
+    noteId: string
+}
+
+export default function LongMenu({noteId} : Props) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false);
     const navigate = useNavigate(); 
@@ -47,10 +51,11 @@ export default function LongMenu() {
         setOpenDeleteDialog(false);
     };
 
-    const handleConfirmDelete = () => {
+    const handleConfirmDelete = async () => {
         console.log("Item deletion button hit");
-        DeleteNote("");
+        await DeleteNote({id: noteId});
         setOpenDeleteDialog(false);
+        navigate('/');
     };
 
     return (

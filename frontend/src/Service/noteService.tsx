@@ -1,4 +1,4 @@
-import { CreateNoteRequest} from "../Dtos/Notes";
+import { CreateNoteRequest, DeleteNoteRequest} from "../Dtos/Notes";
 import { Response } from "../Dtos/Response";
 import apis from '../Config/api';
 
@@ -43,13 +43,14 @@ export async function CreateNote(data: CreateNoteRequest): Promise<string>{
     return body.data;
 }
 
-export async function DeleteNote(id: string): Promise<string>{
-    console.log(`Delete Note data is:`,id);
+export async function DeleteNote(data: DeleteNoteRequest): Promise<string>{
+    console.log(`Delete Note data is:`,data);
 
-    const response = await fetch(apis.notes.delete, {
+    const response = await fetch(`${apis.notes.delete}?id=${data.id}`, {
         method:"POST",
-        body: JSON.stringify(id),
-        headers: {"Content-Type":"application/json"}
+        headers: {
+            "Accept": "text/plain",
+        },    
     })
 
     console.log(response);

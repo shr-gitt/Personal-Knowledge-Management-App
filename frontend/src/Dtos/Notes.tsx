@@ -4,3 +4,7 @@ export interface CreateNoteRequest {
     Content: string;
     Tags?: string[];
 }
+
+export interface DeleteNoteRequest {
+    id : string;
+}
