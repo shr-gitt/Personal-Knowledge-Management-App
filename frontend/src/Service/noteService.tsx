@@ -16,8 +16,6 @@ export async function FetchAllNotes(){
             ? Object.values(body.errors).flat().join("\n")
             : body.message || "Fetch all Notes failed");
     }
-
-    return body.data;
 }
 
 export async function CreateNote(data: CreateNoteRequest): Promise<string>{
@@ -26,6 +24,31 @@ export async function CreateNote(data: CreateNoteRequest): Promise<string>{
     const response = await fetch(apis.notes.create, {
         method:"POST",
         body: JSON.stringify(data),
+        headers: {"Content-Type":"application/json"}
+    })
+
+    console.log(response);
+
+    const body: Response = await response.json();
+
+    console.log(body);
+
+    if(!body.success) {
+        console.log(body.message);
+        throw new Error(body.errors
+            ? Object.values(body.errors).flat().join("\n")
+            : body.message || "Create Note failed");
+    }
+
+    return body.data;
+}
+
+export async function DeleteNote(id: string): Promise<string>{
+    console.log(`Delete Note data is:`,id);
+
+    const response = await fetch(apis.notes.delete, {
+        method:"POST",
+        body: JSON.stringify(id),
         headers: {"Content-Type":"application/json"}
     })
 
