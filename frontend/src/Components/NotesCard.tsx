@@ -1,10 +1,11 @@
+import LongMenu from "./Menu";
 import "./NotesCard.css"
 
 interface Note {
     id: number;
     title: string;
     content: string;
-    updatedAt: string;
+    lastModified: string;
 }
 
 interface Props {
@@ -17,7 +18,8 @@ const NotesCard= ({notes}:Props)=>{
             <div key={note.id} className="note-card">
                 <div className="title-bar">
                     <h5 className="title">{note.title}</h5>
-                    <span className="dates">{note.lastModified}</span>
+                    <span className="dates">{note.lastModified}<LongMenu /></span>
+                    
                 </div>
                 <p className="information">{note.content}</p>
             </div>
