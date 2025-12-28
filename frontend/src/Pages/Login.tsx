@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import Logo from '../assets/logo.png';
 import "./Login.css";
 import {SignIn} from "../Service/authService";
+import {SignInRequest} from "../Dtos/Auth";
 
 interface Props{
     onLogin : () => void;

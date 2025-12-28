@@ -23,9 +23,7 @@ export async function SignUp(data: FormData): Promise<string> {
 
     if (!body.success) {
         console.log(body.message);
-        throw new Error(body.errors
-                ? Object.values(body.errors).flat().join("\n")
-                : body.message || "Registration failed");
+        throw new Error(body.message || "Registration failed");
     }
 
     // Return shape expected by frontend
@@ -53,9 +51,7 @@ export async function SignIn(data: SignInRequest): Promise<string> {
 
     if (!body.success) {
         console.log(body.message);
-        throw new Error(body.errors
-                ? Object.values(body.errors).flat().join("\n")
-                : body.message || "Registration failed");
+        throw new Error(body.message || "Registration failed");
     }
 
     // Return shape expected by frontend
@@ -73,8 +69,6 @@ export async function Logout(){
 
     if (!body.success) {
         console.log(body.message);
-        throw new Error(body.errors
-                ? Object.values(body.errors).flat().join("\n")
-                : body.message || "Logout failed");
+        throw new Error(body.message || "Logout failed");
     }
 }

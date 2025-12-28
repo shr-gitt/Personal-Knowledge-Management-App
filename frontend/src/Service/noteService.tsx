@@ -12,9 +12,7 @@ export async function FetchAllNotes(){
         console.log(`fetch all posts success:`,body.data);
         return body.data;
     }else{
-        throw new Error(body.errors
-            ? Object.values(body.errors).flat().join("\n")
-            : body.message || "Fetch all Notes failed");
+        throw new Error(body.message || "Fetch all Notes failed");
     }
 }
 
@@ -35,9 +33,7 @@ export async function CreateNote(data: CreateNoteRequest): Promise<string>{
 
     if(!body.success) {
         console.log(body.message);
-        throw new Error(body.errors
-            ? Object.values(body.errors).flat().join("\n")
-            : body.message || "Create Note failed");
+        throw new Error(body.message || "Create Note failed");
     }
 
     return body.data;
@@ -61,9 +57,7 @@ export async function DeleteNote(data: DeleteNoteRequest): Promise<string>{
 
     if(!body.success) {
         console.log(body.message);
-        throw new Error(body.errors
-            ? Object.values(body.errors).flat().join("\n")
-            : body.message || "Create Note failed");
+        throw new Error(body.message || "Create Note failed");
     }
 
     return body.data;

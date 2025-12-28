@@ -17,7 +17,7 @@ const CreateNotes = () =>{
         if (!text.trim()) return;
 
         return await CreateNote({
-            UserId: localStorage.getItem("username"),
+            UserId: localStorage.getItem("username")!,
             Title: title,
             Content: body,
             Tags: tags
