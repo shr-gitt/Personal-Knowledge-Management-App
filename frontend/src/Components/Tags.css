@@ -6,7 +6,7 @@
 /* Oval tag styles */
 .tagCard {
   border: 2px solid var(--border-color); /* Border color for the tag */
-  padding: 8px 20px; /* Horizontal padding makes it wider, vertical makes it shorter */
+  padding: 5px 5px; /* Horizontal padding makes it wider, vertical makes it shorter */
   border-radius: 9999px; /* Fully rounded corners for oval effect */
   font-size: 0.875rem; /* Smaller text */
   display: inline-block; /* Ensures the tag is inline */
