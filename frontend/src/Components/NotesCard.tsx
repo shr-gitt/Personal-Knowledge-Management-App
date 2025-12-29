@@ -1,9 +1,11 @@
 import LongMenu from "./Menu";
 import "./NotesCard.css";
+import Tags from "./Tags";
 
 interface Note {
   id: number;
   title: string;
+  tags: string[];
   content: string;
   lastModified: string;
 }
@@ -29,12 +31,13 @@ const NotesCard = ({ notes }: Props) => {
           <div key={note.id} className="note-card">
             <div className="title-bar">
               <h5 className="title">{note.title}</h5>
+              <Tags tags={note.tags} />
               <div className="group">
-              <span className="date-time">
-                <div>{date}</div> 
-                <div>{time}</div> {" "}
-              </span>
-              <LongMenu noteId={note.id.toString()} />
+                <span className="date-time">
+                  <div>{date}</div>
+                  <div>{time}</div>{" "}
+                </span>
+                <LongMenu noteId={note.id.toString()} />
               </div>
             </div>
             <p className="information">{note.content}</p>

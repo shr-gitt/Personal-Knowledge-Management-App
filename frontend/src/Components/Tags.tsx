@@ -1,3 +1,5 @@
+import "./Tags.css"
+
 interface Props {
     tags: string[]; // Array of tags
 }

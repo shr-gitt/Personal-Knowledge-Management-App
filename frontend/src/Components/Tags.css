@@ -1,0 +1,30 @@
+.tagsContainer{
+    display: flex;
+    flex-direction: row;
+}
+
+/* Oval tag styles */
+.tagCard {
+  border: 2px solid var(--border-color); /* Border color for the tag */
+  padding: 8px 20px; /* Horizontal padding makes it wider, vertical makes it shorter */
+  border-radius: 9999px; /* Fully rounded corners for oval effect */
+  font-size: 0.875rem; /* Smaller text */
+  display: inline-block; /* Ensures the tag is inline */
+  margin-right: 8px; /* Space between tags */
+  margin-bottom: 8px; /* Space below each tag */
+  cursor: pointer; /* Makes it clickable */
+  transition: border-color 0.3s ease; /* Smooth border color transition on hover */
+}
+
+.tagCard:hover {
+  border-color: var(--hover-border-color); /* Change border color on hover */
+  color: var(--hover-color); /* Optional: Change text color on hover */
+}
+
+/* Optional: Additional styling to match your theme colors */
+:root {
+  --border-color: #ccc; /* Default border color */
+  --hover-border-color: #0077cc; /* Hover border color */
+  --hover-color: #0077cc; /* Hover text color */
+  --text-color: #333; /* Text color */
+}
