@@ -10,8 +10,6 @@ import Login from "./Pages/Login";
 import Home from "./Pages/Home";
 import CreateNotes from "./Pages/CreateNotes";
 import GraphView from "./Pages/GraphView";
-import Trash from "./Pages/Trash";
-import Settings from "./Pages/Settings";
 import Profile from "./Pages/Profile";
 import EditInfo from "./Pages/Profile/editInformation";
 import ChangePassword from "./Pages/Profile/changePassword";
@@ -66,14 +64,6 @@ function App() {
           <Route
             path="/graph_view"
             element={isLoggedIn ? <GraphView /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/trash"
-            element={isLoggedIn ? <Trash /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/settings"
-            element={isLoggedIn ? <Settings /> : <Navigate to="/login" />}
           />
           <Route
             path="/profile"
