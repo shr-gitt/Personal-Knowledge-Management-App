@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: flex-start;
     height: 100vh;
-    gap:5px;    
+    gap:5px;
 }
 
 .pageContainer>h1{

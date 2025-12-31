@@ -1,11 +1,10 @@
 .pageContainer{
-    display:"flex";
+    display: flex;
     flex-direction: column;
     overflow: hidden;
 }
 
 .content {
-    margin-top: 60px;  /* same height as navbar */
+    margin-top: 15px;  /* same height as navbar */
     overflow-y: auto;
-    height: calc(100vh - 60px);
 }
