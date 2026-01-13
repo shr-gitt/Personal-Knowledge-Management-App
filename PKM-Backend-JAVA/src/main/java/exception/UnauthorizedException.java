@@ -1,7 +1,7 @@
 package exception;
 
-public class Unauthorized extends RuntimeException{
-    public Unauthorized(String message){
+public class UnauthorizedException extends RuntimeException{
+    public UnauthorizedException(String message){
         super(message);
     }
 }

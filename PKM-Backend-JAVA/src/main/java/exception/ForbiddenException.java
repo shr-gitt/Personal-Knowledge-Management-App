@@ -1,7 +1,7 @@
 package exception;
 
-public class Forbidden extends RuntimeException{
-    public Forbidden(String message){
+public class ForbiddenException extends RuntimeException{
+    public ForbiddenException(String message){
         super(message);
     }
 }
