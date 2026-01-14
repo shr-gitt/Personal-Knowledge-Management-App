@@ -1,5 +1,7 @@
 package model;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -7,6 +9,8 @@ import java.io.File;
 import java.util.List;
 
 @Document(collection = "applicationUsers")
+@Getter
+@Setter
 public class User {
 
     @Id
@@ -16,49 +20,21 @@ public class User {
     private String email;
     private boolean emailConfirmed;
     private String password;
-    private double phoneNumber;
+    private String phoneNumber;
     private boolean TwoFactorEnabled;
     private String image;
 
-    protected User(){
+    public User(){
 
     }
 
-    public User(String username, String name, String email, String password, double phoneNumber, String image) {
+    public User(String username, String name, String email, String password, String phoneNumber, String image) {
         this.username = username;
         this.name = name;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.image = image;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public double getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public String getImage() {
-        return image;
     }
 
     public void changePassword(String encodedPassword) {
