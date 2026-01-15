@@ -1,9 +1,9 @@
-package exception;
+package com.example.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import response.ApiResponse;
+import com.example.response.ApiResponse;
 
 public class GlobalExceptionHandler {
     @ExceptionHandler(BusinessException.class)

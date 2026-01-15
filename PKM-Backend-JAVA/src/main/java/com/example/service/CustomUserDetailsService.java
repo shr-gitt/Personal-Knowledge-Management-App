@@ -1,11 +1,11 @@
-package service;
+package com.example.service;
 
-import exception.BusinessException;
+import com.example.exception.BusinessException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import repository.UserRepository;
+import com.example.repository.UserRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -16,10 +16,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     public UserDetails loadUserByUsername(String username) {
-        model.User user = userRepository.findByUsername(username)
+        com.example.model.User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new BusinessException("User not found"));
 
-        return User.withUsername(user.getEmail())
+        return User.withUsername(user.getUsername())
                 .password(user.getPassword())
                 .build();
     }

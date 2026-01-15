@@ -1,14 +1,14 @@
-package service;
+package com.example.service;
 
-import dto.SignUpRequest;
-import exception.BusinessException;
-import model.User;
+import com.example.dto.SignUpRequest;
+import com.example.exception.BusinessException;
+import com.example.model.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import repository.UserRepository;
-import response.ApiResponse;
+import com.example.repository.UserRepository;
+import com.example.response.ApiResponse;
 
-import static response.ApiResponse.success;
+import static com.example.response.ApiResponse.success;
 
 @Service
 public class AuthService {

@@ -1,12 +1,9 @@
-package model;
+package com.example.model;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.io.File;
-import java.util.List;
 
 @Document(collection = "applicationUsers")
 @Getter
@@ -21,7 +18,7 @@ public class User {
     private boolean emailConfirmed;
     private String password;
     private String phoneNumber;
-    private boolean TwoFactorEnabled;
+    private boolean twoFactorEnabled;
     private String image;
 
     public User(){

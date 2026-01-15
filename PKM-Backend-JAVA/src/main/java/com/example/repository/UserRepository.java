@@ -1,7 +1,9 @@
-package repository;
+package com.example.repository;
 
-import model.User;
+import com.example.model.User;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import java.util.Optional;
 

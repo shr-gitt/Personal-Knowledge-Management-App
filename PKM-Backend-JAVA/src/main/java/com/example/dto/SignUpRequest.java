@@ -1,4 +1,4 @@
-package dto;
+package com.example.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -25,7 +25,4 @@ public class SignUpRequest {
     private String password;
 
     private String phoneNumber;
-
-    @Schema(type = "string", format = "binary")
-    private MultipartFile image;
 }
