@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.SignInRequest;
 import com.example.dto.SignUpRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springdoc.core.annotations.ParameterObject;
@@ -36,5 +37,10 @@ public class AuthController {
     )
     public ResponseEntity<ApiResponse<Object>> register(@ModelAttribute SignUpRequest request) throws Exception {
         return ResponseEntity.ok(authService.register(request));
+    }
+
+    @PostMapping(value = "/login")
+    public ResponseEntity<ApiResponse<Object>> login(@RequestBody SignInRequest request) throws Exception {
+        return ResponseEntity.ok(authService.signIn(request));
     }
 }
