@@ -25,4 +25,7 @@ public class SignUpRequest {
     private String password;
 
     private String phoneNumber;
+
+    @Schema(type = "string", format = "binary")
+    private MultipartFile imageFile;
 }

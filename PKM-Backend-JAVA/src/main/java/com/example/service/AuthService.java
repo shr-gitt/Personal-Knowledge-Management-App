@@ -19,12 +19,16 @@ public class AuthService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public ApiResponse register(SignUpRequest request) {
+    public ApiResponse register(SignUpRequest request) throws Exception {
         if(userRepository.existsByEmail(request.getEmail()))
             throw new BusinessException("Email already exists");
 
         if (userRepository.existsByUsername(request.getUsername()))
             throw new BusinessException("Username already exists");
+
+        UploadImageService uploadImageService = new UploadImageService();
+
+        String imagePath = uploadImageService.uploadImage(request.getImageFile());
 
         User user = new User();
 
@@ -33,6 +37,7 @@ public class AuthService {
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setPhoneNumber(request.getPhoneNumber());
+        user.setImage(imagePath);
         userRepository.save(user);
 
         return success("User successfully registered", user);
