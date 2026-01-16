@@ -5,7 +5,9 @@ import com.example.dto.SignUpRequest;
 import com.example.exception.BusinessException;
 import com.example.model.User;
 import jakarta.transaction.Transactional;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.repository.UserRepository;
@@ -15,15 +17,19 @@ import static com.example.response.ApiResponse.success;
 
 @Service
 public class AuthService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UploadImageService uploadImageService;
-    private final CustomUserDetailsService customUserDetailsService;
-    public AuthService(UserRepository userRepository,  PasswordEncoder passwordEncoder, UploadImageService uploadImageService, CustomUserDetailsService customUserDetailsService) {
+    private final AuthenticationManager authenticationManager;
+    public AuthService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            UploadImageService uploadImageService,
+            AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.uploadImageService = uploadImageService;
-        this.customUserDetailsService = customUserDetailsService;
+        this.authenticationManager = authenticationManager;
     }
 
     @Transactional
@@ -54,11 +60,15 @@ public class AuthService {
     }
 
     public ApiResponse signIn(SignInRequest request) {
-        UserDetails userDetails = customUserDetailsService.loadUserByUsername(request.getUsername());
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(),
+                        request.getPassword()
+                )
+        );
 
-        if(passwordEncoder.matches(request.getPassword(), userDetails.getPassword()))
-            return success("User successfully signed in", userDetails);
-        else
-            throw new BusinessException("Incorrect password. Please try again");
+        //String token = jwtService.generateToken(authentication);
+
+        return success("User successfully signed in", authentication);
     }
 }
