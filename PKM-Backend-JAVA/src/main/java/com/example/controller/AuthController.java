@@ -3,7 +3,7 @@ package com.example.controller;
 import com.example.dto.SignInRequest;
 import com.example.dto.SignUpRequest;
 import io.swagger.v3.oas.annotations.Operation;
-import org.springdoc.core.annotations.ParameterObject;
+import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,12 +35,15 @@ public class AuthController {
             value = "/register",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
-    public ResponseEntity<ApiResponse<Object>> register(@ModelAttribute SignUpRequest request) throws Exception {
+    public ResponseEntity<ApiResponse<Object>> register(@Valid @ModelAttribute SignUpRequest request) {
         return ResponseEntity.ok(authService.register(request));
     }
 
-    @PostMapping(value = "/login")
-    public ResponseEntity<ApiResponse<Object>> login(@RequestBody SignInRequest request) throws Exception {
+    @PostMapping(
+            value = "/login"
+            ,consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<ApiResponse<Object>> login(@Valid @RequestBody SignInRequest request) {
         return ResponseEntity.ok(authService.signIn(request));
     }
 }

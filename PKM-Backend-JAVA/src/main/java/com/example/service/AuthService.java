@@ -4,7 +4,7 @@ import com.example.dto.SignInRequest;
 import com.example.dto.SignUpRequest;
 import com.example.exception.BusinessException;
 import com.example.model.User;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,8 +32,8 @@ public class AuthService {
         this.authenticationManager = authenticationManager;
     }
 
-    @Transactional
-    public ApiResponse register(SignUpRequest request) throws Exception {
+    //@Transactional(transactionManager = "transactionManager")
+    public ApiResponse register(SignUpRequest request) {
         if(userRepository.existsByEmail(request.getEmail()))
             throw new BusinessException("Email already exists");
 
