@@ -4,6 +4,7 @@ import com.example.dto.SignInRequest;
 import com.example.dto.SignUpRequest;
 import com.example.exception.BusinessException;
 import com.example.model.User;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class AuthService {
         this.customUserDetailsService = customUserDetailsService;
     }
 
+    @Transactional
     public ApiResponse register(SignUpRequest request) throws Exception {
         if(userRepository.existsByEmail(request.getEmail()))
             throw new BusinessException("Email already exists");
@@ -32,7 +34,11 @@ public class AuthService {
         if (userRepository.existsByUsername(request.getUsername()))
             throw new BusinessException("Username already exists");
 
-        String imagePath = uploadImageService.uploadImage(request.getImageFile());
+        String imagePath = null;
+
+        if (request.getImageFile() != null) {
+            imagePath = uploadImageService.uploadImage(request.getImageFile());
+        }
 
         User user = new User();
 
