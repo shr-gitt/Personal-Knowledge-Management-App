@@ -33,7 +33,7 @@ public class AuthService {
     }
 
     //@Transactional(transactionManager = "transactionManager")
-    public ApiResponse register(SignUpRequest request) {
+    public ApiResponse signUp(SignUpRequest request) {
         if(userRepository.existsByEmail(request.getEmail()))
             throw new BusinessException("Email already exists");
 

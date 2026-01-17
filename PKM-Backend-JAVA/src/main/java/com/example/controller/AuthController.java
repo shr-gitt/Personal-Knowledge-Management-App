@@ -36,7 +36,7 @@ public class AuthController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE
     )
     public ResponseEntity<ApiResponse<Object>> register(@Valid @ModelAttribute SignUpRequest request) {
-        return ResponseEntity.ok(authService.register(request));
+        return ResponseEntity.ok(authService.signUp(request));
     }
 
     @PostMapping(
