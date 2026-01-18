@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.dto.noteDtos.CreateNoteRequest;
+import com.example.dto.noteDtos.UpdateNoteRequest;
 import com.example.response.ApiResponse;
 import com.example.service.NotesService;
 import jakarta.validation.Valid;
@@ -20,5 +21,10 @@ public class NotesController {
     @PostMapping(value = "/createNote")
     public ResponseEntity<ApiResponse<Object>> createNote(@Valid @RequestBody CreateNoteRequest request) {
         return ResponseEntity.ok(notesService.createNote(request));
+    }
+
+    @PostMapping(value = "/updateNote")
+    public ResponseEntity<ApiResponse<Object>> updateNote(@Valid @RequestBody UpdateNoteRequest request) {
+        return ResponseEntity.ok(notesService.updateNote(request));
     }
 }

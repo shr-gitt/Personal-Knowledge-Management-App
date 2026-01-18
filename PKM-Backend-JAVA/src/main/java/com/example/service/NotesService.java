@@ -1,6 +1,7 @@
 package com.example.service;
 
 import com.example.dto.noteDtos.CreateNoteRequest;
+import com.example.dto.noteDtos.UpdateNoteRequest;
 import com.example.exception.ValidationException;
 import com.example.model.Note;
 import com.example.repository.NoteRepository;
@@ -39,5 +40,24 @@ public class NotesService {
         noteRepository.save(note);
 
         return success("Note successfully created", note);
+    }
+
+    public ApiResponse updateNote(UpdateNoteRequest request) {
+        if(request.getNoteId() == null) {
+            throw new ValidationException("Note id is required");
+        }
+
+        if(request.getNoteTitle() == null) {
+            throw new ValidationException("Note title is required");
+        }
+
+        Note note = noteRepository.findById(request.getNoteId()).orElse(null);
+
+        note.setTitle(request.getNoteTitle());
+        note.setContent(request.getNoteContent());
+        note.setUpdated(Date.valueOf(LocalDate.now()));
+        noteRepository.save(note);
+
+        return success("Note successfully updated", note);
     }
 }
