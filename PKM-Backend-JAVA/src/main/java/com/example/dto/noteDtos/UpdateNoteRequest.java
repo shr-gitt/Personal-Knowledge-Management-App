@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 public class UpdateNoteRequest {
     @NotBlank
@@ -12,4 +14,5 @@ public class UpdateNoteRequest {
     @NotBlank
     private String noteTitle;
     private String noteContent;
+    private List<String> tags;
 }

@@ -33,6 +33,7 @@ public class NotesService {
         Note note = new Note();
         note.setTitle(createNoteRequest.getTitle());
         note.setContent(createNoteRequest.getContent());
+        note.setTags(createNoteRequest.getTags());
         note.setUserId(createNoteRequest.getUserId());
         note.setCreated(Date.valueOf(LocalDate.now()));
         note.setUpdated(Date.valueOf(LocalDate.now()));
@@ -55,6 +56,7 @@ public class NotesService {
 
         note.setTitle(request.getNoteTitle());
         note.setContent(request.getNoteContent());
+        note.setTags(request.getTags());
         note.setUpdated(Date.valueOf(LocalDate.now()));
         noteRepository.save(note);
 
