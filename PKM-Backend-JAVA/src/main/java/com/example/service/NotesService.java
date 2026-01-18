@@ -60,4 +60,12 @@ public class NotesService {
 
         return success("Note successfully updated", note);
     }
+
+    public ApiResponse deleteNote(String noteId) {
+        Note note = noteRepository.findById(noteId).orElse(null);
+
+        noteRepository.delete(note);
+
+        return success("Note successfully deleted", null);
+    }
 }

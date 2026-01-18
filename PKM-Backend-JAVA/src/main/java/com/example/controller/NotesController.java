@@ -27,4 +27,9 @@ public class NotesController {
     public ResponseEntity<ApiResponse<Object>> updateNote(@Valid @RequestBody UpdateNoteRequest request) {
         return ResponseEntity.ok(notesService.updateNote(request));
     }
+
+    @PostMapping(value = "/deleteNote")
+    public ResponseEntity<ApiResponse> deleteNote(String noteId) {
+        return ResponseEntity.ok(notesService.deleteNote(noteId));
+    }
 }
