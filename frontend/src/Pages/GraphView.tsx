@@ -11,6 +11,7 @@ export default function GraphView() {
 
   type GraphNode = {
     id: string;
+    type: "note" | "tag";
     group?: number;
     x?: number;
     y?: number;
@@ -32,9 +33,10 @@ export default function GraphView() {
   useEffect(() => {
     if (!data.nodes.length) return;
 
+    const padding = 50; // extra space around nodes
+
     const width = 928;
     const height = 680;
-    const color = d3.scaleOrdinal(d3.schemeCategory10);
 
     // Split the label into multiple lines based on space (or any custom separator)
     const splitLabel = (label: string, maxLength: number) => {
@@ -77,7 +79,7 @@ export default function GraphView() {
         d3
           .forceLink<GraphNode, GraphLink>(links)
           .id((d) => d.id)
-          .distance(100)
+          .distance(100),
       ) // Increase distance between linked nodes
       .force("charge", d3.forceManyBody().strength(-300)) // Increase repulsive force (stronger charge)
       .force("center", d3.forceCenter(0, 0)); // Keep nodes centered
@@ -94,7 +96,7 @@ export default function GraphView() {
       .append("g")
       .attr("stroke", "#fff")
       .attr("stroke-width", 1.5)
-      .selectAll("g")
+      .selectAll<SVGGElement, GraphNode>("g")
       .data(nodes)
       .join("g")
       .call(
@@ -102,7 +104,7 @@ export default function GraphView() {
           .drag<SVGGElement, GraphNode>()
           .on("start", dragstarted)
           .on("drag", dragged)
-          .on("end", dragended)
+          .on("end", dragended),
       );
 
     // Circle for each node
@@ -124,27 +126,31 @@ export default function GraphView() {
         const padding = 6; // Padding around the label
         const radius = Math.max(
           12,
-          Math.max(bbox?.width || 0, bbox?.height || 0) / 2 + padding
+          Math.max(bbox?.width || 0, bbox?.height || 0) / 2 + padding,
         );
         return radius;
       })
-      .attr("fill", (d) => color(d.group))
+      .attr("fill", (d) => (d.type === "tag" ? "#1f78b4" : "#a6cee3"))
       .attr("stroke", "#050000ff")
       .attr("stroke-width", 1.5);
 
     // Label for each node: Split into multiple lines
-    const label = node
-      .append("g")
+    node
       .selectAll("text")
-      .data((d) => splitLabel(d.label, 20)) // Split into lines with max length of 20 characters
+      .data((d) =>
+        splitLabel(d.label!, 20).map((line) => ({
+          line,
+          nodeType: d.type, // save original node type
+          nodeColor: d.type === "tag" ? "#1d4ed8" : "#14532d", // or use d.color if you have
+        })),
+      )
       .join("text")
-      .text((d) => d)
+      .text((d) => d.line)
       .attr("text-anchor", "middle")
       .attr("font-size", 12)
-      .attr("fill", "#ae1f1fff")
       .attr("pointer-events", "none")
-      .attr("dy", (d, i) => `${i * 1.2}em`) // Add vertical spacing for multiple lines
-      .attr("y", (d) => -5);
+      .attr("dy", (_, i) => `${i * 1.2}em`) // vertical spacing
+      .attr("y", -5);
 
     simulation.on("tick", () => {
       link
@@ -152,8 +158,19 @@ export default function GraphView() {
         .attr("y1", (d) => (d.source as GraphNode).y ?? 0)
         .attr("x2", (d) => (d.target as GraphNode).x ?? 0)
         .attr("y2", (d) => (d.target as GraphNode).y ?? 0);
+      const svgWidth = 2000; // fixed width
 
-      // Update both circle and label position via transform
+      // Dynamically calculate bounds of all nodes
+      const allY = nodes.map((d) => d.y ?? 0);
+      const minY = Math.min(...allY) - padding;
+      const maxY = Math.max(...allY) + padding;
+
+      // Resize SVG based on node bounds
+      svg
+        .attr("width", svgWidth)
+        .attr("height", maxY - minY) // dynamic height only
+        .attr("viewBox", `${-svgWidth / 2} ${minY} ${svgWidth} ${maxY - minY}`);
+
       node.attr("transform", (d) => `translate(${d.x ?? 0}, ${d.y ?? 0})`);
     });
 
@@ -174,7 +191,9 @@ export default function GraphView() {
       event.subject.fy = null;
     }
 
-    return () => simulation.stop();
+    return () => {
+      simulation.stop();
+    };
   }, [data]);
 
   return <svg ref={svgRef} style={{ maxWidth: "100%", height: "auto" }} />;
