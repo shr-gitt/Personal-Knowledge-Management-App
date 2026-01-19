@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 import { fetchUserGraph } from "../Service/graphService";
+import "./GraphView.css";
 
 export default function GraphView() {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -71,6 +72,7 @@ export default function GraphView() {
     svg.selectAll("*").remove(); // cleanup previous render
 
     const links = data.links.map((d) => ({ ...d }));
+    const svgWidth = 2000; // fixed width
 
     const simulation = d3
       .forceSimulation<GraphNode>(nodes)
@@ -82,8 +84,7 @@ export default function GraphView() {
           .distance(100),
       ) // Increase distance between linked nodes
       .force("charge", d3.forceManyBody().strength(-300)) // Increase repulsive force (stronger charge)
-      .force("center", d3.forceCenter(0, 0)); // Keep nodes centered
-
+      .force("center", d3.forceCenter(svgWidth / 2, 0));
     const link = svg
       .append("g")
       .attr("stroke", "#999")
@@ -158,7 +159,6 @@ export default function GraphView() {
         .attr("y1", (d) => (d.source as GraphNode).y ?? 0)
         .attr("x2", (d) => (d.target as GraphNode).x ?? 0)
         .attr("y2", (d) => (d.target as GraphNode).y ?? 0);
-      const svgWidth = 2000; // fixed width
 
       // Dynamically calculate bounds of all nodes
       const allY = nodes.map((d) => d.y ?? 0);
@@ -169,7 +169,7 @@ export default function GraphView() {
       svg
         .attr("width", svgWidth)
         .attr("height", maxY - minY) // dynamic height only
-        .attr("viewBox", `${-svgWidth / 2} ${minY} ${svgWidth} ${maxY - minY}`);
+        .attr("viewBox", `0 ${minY} ${svgWidth} ${maxY - minY}`);
 
       node.attr("transform", (d) => `translate(${d.x ?? 0}, ${d.y ?? 0})`);
     });
@@ -196,5 +196,9 @@ export default function GraphView() {
     };
   }, [data]);
 
-  return <svg ref={svgRef} style={{ maxWidth: "100%", height: "auto" }} />;
+  return (
+    <div className="graph-scroll">
+      <svg ref={svgRef} />
+    </div>
+  );
 }

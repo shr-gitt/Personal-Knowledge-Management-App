@@ -5,6 +5,13 @@
     gap:12px; 
 }
 
+.graph-scroll {
+  width: 100%;
+  height: 100vh;          
+  overflow-x: auto;      
+  overflow-y: auto;      
+}
+
 .graph-header { 
     display:flex; 
     justify-content:space-between; 
